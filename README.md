@@ -32,12 +32,12 @@ class CounterState extends Equatable {
 }
 ```
 
-### Create a StateNotifier
+### Create a Velo
 
 ```dart
 import 'package:velo/velo.dart';
 
-class CounterNotifier extends StateNotifier<CounterState> {
+class CounterNotifier extends Velo<CounterState> {
   CounterNotifier() : super(const CounterState());
   
   void increment() {
@@ -69,7 +69,7 @@ class CounterPage extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(title: const Text('Counter Example')),
-            body: StateNotifierBuilder<CounterNotifier, CounterState>(
+            body: VeloBuilder<CounterNotifier, CounterState>(
               builder: (context, state) {
                 return Center(
                   child: Text(

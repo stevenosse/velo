@@ -7,7 +7,6 @@ abstract class Velo<S> extends ValueNotifier<S> {
   S get state => super.value;
 
   void emit(S state) {
-    // Check equality before emitting to prevent unnecessary rebuilds
     if (state is Equatable) {
       if ((state as Equatable) != (value as Equatable)) {
         value = state;
