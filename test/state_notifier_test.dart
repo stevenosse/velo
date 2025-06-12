@@ -192,7 +192,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<CounterNotifier>.value(
             value: notifier,
-            child: StateNotifierBuilder<CounterNotifier, CounterState>(
+            child: VeloBuilder<CounterNotifier, CounterState>(
               builder: (context, state) {
                 return Text('Count: ${state.count}');
               },
@@ -218,7 +218,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<CounterNotifier>.value(
             value: notifier,
-            child: StateNotifierBuilder<CounterNotifier, CounterState>(
+            child: VeloBuilder<CounterNotifier, CounterState>(
               loadingWidget: const Text('Loading'),
               builder: (context, state) {
                 throw Exception('Builder error');
@@ -236,7 +236,7 @@ void main() {
     testWidgets('should handle missing notifier gracefully', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: StateNotifierBuilder<CounterNotifier, CounterState>(
+          home: VeloBuilder<CounterNotifier, CounterState>(
             loadingWidget: Text('No Notifier'),
             builder: _buildText,
           ),
@@ -257,7 +257,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<CounterNotifier>.value(
             value: notifier,
-            child: StateNotifierListener<CounterNotifier, CounterState>(
+            child: VeloListener<CounterNotifier, CounterState>(
               listener: (context, state) {
                 listenerCallCount++;
                 lastState = state;
@@ -287,7 +287,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<CounterNotifier>.value(
             value: notifier,
-            child: StateNotifierListener<CounterNotifier, CounterState>(
+            child: VeloListener<CounterNotifier, CounterState>(
               listener: (context, state) {
                 listenerCallCount++;
               },
@@ -316,7 +316,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<CounterNotifier>.value(
             value: notifier,
-            child: StateNotifierConsumer<CounterNotifier, CounterState>(
+            child: VeloConsumer<CounterNotifier, CounterState>(
               listener: (context, state) {
                 listenerCallCount++;
               },
@@ -348,7 +348,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: MultiStateNotifierListener(
+          home: MultiVeloListener(
             listeners: [
               ChangeNotifierProvider<CounterNotifier>.value(value: notifier1),
               ChangeNotifierProvider<SimpleNotifier>.value(value: notifier2),

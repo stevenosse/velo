@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:velo/velo.dart';
 
-class StateNotifierBuilder<N extends Velo<T>, T> extends StatelessWidget {
+class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
   final N? notifier;
   final Widget Function(BuildContext context, T state) builder;
   final Widget? loadingWidget;
 
-  const StateNotifierBuilder({
+  const VeloBuilder({
     super.key,
     this.notifier,
     required this.builder,

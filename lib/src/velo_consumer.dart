@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:velo/src/velo.dart';
 
-class StateNotifierConsumer<N extends Velo<T>, T> extends StatefulWidget {
+class VeloConsumer<N extends Velo<T>, T> extends StatefulWidget {
   final N? notifier;
   final Widget Function(BuildContext context, T state) builder;
   final void Function(BuildContext context, T state)? listener;
 
-  const StateNotifierConsumer({
+  const VeloConsumer({
     super.key,
     this.notifier,
     required this.builder,
@@ -15,10 +15,10 @@ class StateNotifierConsumer<N extends Velo<T>, T> extends StatefulWidget {
   });
 
   @override
-  State<StateNotifierConsumer<N, T>> createState() => _StateNotifierConsumerState<N, T>();
+  State<VeloConsumer<N, T>> createState() => _VeloConsumerState<N, T>();
 }
 
-class _StateNotifierConsumerState<N extends Velo<T>, T> extends State<StateNotifierConsumer<N, T>> {
+class _VeloConsumerState<N extends Velo<T>, T> extends State<VeloConsumer<N, T>> {
   late N notifier;
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _StateNotifierConsumerState<N extends Velo<T>, T> extends State<StateNotif
   }
 
   @override
-  void didUpdateWidget(covariant StateNotifierConsumer<N, T> oldWidget) {
+  void didUpdateWidget(covariant VeloConsumer<N, T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldNotifier = oldWidget.notifier ?? context.read<N>();
     final newNotifier = widget.notifier ?? context.read<N>();

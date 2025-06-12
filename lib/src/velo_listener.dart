@@ -8,8 +8,8 @@ import 'package:velo/src/velo.dart';
 ///
 /// This is useful when you want to perform side effects (like showing a snackbar)
 /// in response to state changes without rebuilding the widget tree.
-class StateNotifierListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
-  const StateNotifierListener({
+class VeloListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
+  const VeloListener({
     super.key,
     this.notifier,
     required this.listener,
@@ -23,7 +23,7 @@ class StateNotifierListener<N extends Velo<T>, T> extends SingleChildStatefulWid
   State<StatefulWidget> createState() => _StateNotifierListenerState<N, T>();
 }
 
-class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState<StateNotifierListener<N, T>> {
+class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState<VeloListener<N, T>> {
   late final N notifier;
   late T state;
 
