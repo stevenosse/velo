@@ -2,6 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:velo/velo.dart';
 
+/// A widget that listens to a [Velo] and rebuilds whenever the state changes.
+/// 
+/// [VeloBuilder] is the primary way to consume state from a [Velo] in your UI.
+/// It automatically rebuilds when the state changes and provides error handling.
+/// 
+/// **Parameters:**
+/// - [notifier]: Optional [Velo] instance. If null, will use [Provider] to find it.
+/// - [builder]: Function called to build the widget with the current state.
+/// - [loadingWidget]: Optional widget shown when an error occurs. Defaults to [SizedBox.shrink].
+/// 
+/// **Example:**
+/// ```dart
+/// VeloBuilder<CounterVelo, CounterState>(
+///   builder: (context, state) {
+///     return Text('Count: ${state.count}');
+///   },
+/// )
+/// ```
+/// 
+/// **With error handling:**
+/// ```dart
+/// VeloBuilder<CounterVelo, CounterState>(
+///   loadingWidget: Text('Something went wrong'),
+///   builder: (context, state) {
+///     return Text('Count: ${state.count}');
+///   },
+/// )
+/// ```
 class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
   final N? notifier;
   final Widget Function(BuildContext context, T state) builder;
@@ -25,13 +53,13 @@ class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
           try {
             return builder(context, state);
           } catch (error) {
-            debugPrint('StateNotifierBuilder: Error in builder callback: $error');
+            debugPrint('VeloBuilder: Error in builder callback: $error');
             return loadingWidget ?? const SizedBox.shrink();
           }
         },
       );
     } catch (error) {
-      debugPrint('StateNotifierBuilder: Failed to find notifier of type $N in widget tree');
+      debugPrint('VeloBuilder: Failed to find notifier of type $N in widget tree');
       return loadingWidget ?? const SizedBox.shrink();
     }
   }

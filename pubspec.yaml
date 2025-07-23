@@ -1,11 +1,24 @@
 name: velo
-description: State management utilities based on ValueNotifier with Equatable support
+description: A simple and efficient state management solution for Flutter, inspired by flutter_bloc but keeping only the essentials.
 version: 1.0.0
-publish_to: none
+homepage: https://github.com/username/velo
+repository: https://github.com/username/velo
+issue_tracker: https://github.com/username/velo/issues
+documentation: https://github.com/username/velo#readme
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
   flutter: ">=3.0.0"
+
+funding:
+  - https://github.com/sponsors/username
+
+topics:
+  - state-management
+  - flutter
+  - cubit
+  - valuenotifier
+  - equatable
 
 dependencies:
   flutter:
@@ -16,4 +29,4 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0

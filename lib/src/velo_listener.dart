@@ -4,7 +4,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:equatable/equatable.dart';
 import 'package:velo/src/velo.dart';
 
-/// A widget that listens to changes in a StateNotifier without rebuilding.
+/// A widget that listens to changes in a Velo without rebuilding.
 ///
 /// This is useful when you want to perform side effects (like showing a snackbar)
 /// in response to state changes without rebuilding the widget tree.
@@ -20,10 +20,10 @@ class VeloListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
   final void Function(BuildContext context, T state) listener;
 
   @override
-  State<StatefulWidget> createState() => _StateNotifierListenerState<N, T>();
+  State<StatefulWidget> createState() => _VeloListenerState<N, T>();
 }
 
-class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState<VeloListener<N, T>> {
+class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloListener<N, T>> {
   late final N notifier;
   late T state;
 
@@ -35,7 +35,7 @@ class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState
       state = notifier.state;
       notifier.addListener(_handleStateChange);
     } catch (error) {
-      debugPrint('StateNotifierListener: Failed to find notifier of type $N in widget tree');
+      debugPrint('VeloListener: Failed to find notifier of type $N in widget tree');
       rethrow;
     }
   }
@@ -47,7 +47,7 @@ class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState
       try {
         widget.listener(context, newState);
       } catch (error) {
-        debugPrint('StateNotifierListener: Error in listener callback: $error');
+        debugPrint('VeloListener: Error in listener callback: $error');
       }
     }
   }
@@ -64,7 +64,7 @@ class _StateNotifierListenerState<N extends Velo<T>, T> extends SingleChildState
     try {
       notifier.removeListener(_handleStateChange);
     } catch (error) {
-      debugPrint('StateNotifierListener: Error removing listener during dispose');
+      debugPrint('VeloListener: Error removing listener during dispose');
     }
     super.dispose();
   }

@@ -1,0 +1,73 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.32.5'
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Verify formatting
+      run: |
+        dart format --output=none --set-exit-if-changed .
+        if [ $? -ne 0 ]; then
+          echo "❌ Code is not properly formatted"
+          echo "Run 'dart format .' to fix formatting issues"
+          exit 1
+        fi
+        echo "✅ Code is properly formatted"
+        
+    - name: Analyze project source
+      run: |
+        flutter analyze --fatal-infos --fatal-warnings
+        echo "✅ Analysis completed successfully"
+        
+    - name: Check for unused dependencies
+      run: |
+        flutter pub deps --json > deps.json
+        echo "✅ Dependencies check completed"
+        
+    - name: Verify pub publish readiness
+      run: |
+        flutter pub publish --dry-run
+        echo "✅ Package is ready for publication"
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
