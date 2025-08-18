@@ -3,15 +3,15 @@ import 'package:provider/provider.dart';
 import '../velo.dart';
 
 /// A widget that listens to a [Velo] and rebuilds whenever the state changes.
-/// 
+///
 /// [VeloBuilder] is the primary way to consume state from a [Velo] in your UI.
 /// It automatically rebuilds when the state changes and provides error handling.
-/// 
+///
 /// **Parameters:**
 /// - [notifier]: Optional [Velo] instance. If null, will use [Provider] to find it.
 /// - [builder]: Function called to build the widget with the current state.
 /// - [loadingWidget]: Optional widget shown when an error occurs. Defaults to [SizedBox.shrink].
-/// 
+///
 /// **Example:**
 /// ```dart
 /// VeloBuilder<CounterVelo, CounterState>(
@@ -20,7 +20,7 @@ import '../velo.dart';
 ///   },
 /// )
 /// ```
-/// 
+///
 /// **With error handling:**
 /// ```dart
 /// VeloBuilder<CounterVelo, CounterState>(
@@ -31,7 +31,6 @@ import '../velo.dart';
 /// )
 /// ```
 class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
-
   const VeloBuilder({
     super.key,
     this.notifier,
@@ -59,7 +58,8 @@ class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
         },
       );
     } on Exception catch (error) {
-      debugPrint('VeloBuilder: Failed to find notifier of type $N in widget tree: $error');
+      debugPrint(
+          'VeloBuilder: Failed to find notifier of type $N in widget tree: $error');
       return loadingWidget ?? const SizedBox.shrink();
     }
   }

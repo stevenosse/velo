@@ -24,7 +24,8 @@ class VeloListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
   State<StatefulWidget> createState() => _VeloListenerState<N, T>();
 }
 
-class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloListener<N, T>> {
+class _VeloListenerState<N extends Velo<T>, T>
+    extends SingleChildState<VeloListener<N, T>> {
   late final N notifier;
   late T state;
 
@@ -36,7 +37,8 @@ class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloList
       state = notifier.state;
       notifier.addListener(_handleStateChange);
     } catch (error) {
-      debugPrint('VeloListener: Failed to find notifier of type $N in widget tree');
+      debugPrint(
+          'VeloListener: Failed to find notifier of type $N in widget tree');
       rethrow;
     }
   }
@@ -65,11 +67,13 @@ class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloList
     try {
       notifier.removeListener(_handleStateChange);
     } on Exception catch (error) {
-      debugPrint('VeloListener: Error removing listener during dispose: $error');
+      debugPrint(
+          'VeloListener: Error removing listener during dispose: $error');
     }
     super.dispose();
   }
 
   @override
-  Widget buildWithChild(BuildContext context, Widget? child) => child ?? const SizedBox.shrink();
+  Widget buildWithChild(BuildContext context, Widget? child) =>
+      child ?? const SizedBox.shrink();
 }

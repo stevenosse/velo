@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:velo/velo.dart';
 
-Widget buildText(BuildContext context, CounterState state) => Text('Count: ${state.count}');
+Widget buildText(BuildContext context, CounterState state) =>
+    Text('Count: ${state.count}');
 
 class CounterState extends Equatable {
-
   const CounterState({
     this.count = 0,
     this.isLoading = false,
@@ -21,11 +21,12 @@ class CounterState extends Equatable {
     int? count,
     bool? isLoading,
     String? error,
-  }) => CounterState(
-      count: count ?? this.count,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
+  }) =>
+      CounterState(
+        count: count ?? this.count,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+      );
 
   @override
   List<Object?> get props => [count, isLoading, error];
@@ -36,7 +37,8 @@ class SimpleState {
   final int value;
 
   @override
-  bool operator ==(Object other) => other is SimpleState && other.value == value;
+  bool operator ==(Object other) =>
+      other is SimpleState && other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -88,14 +90,16 @@ Widget createTestWidget({
   required Widget child,
   CounterNotifier? counterNotifier,
   SimpleNotifier? simpleNotifier,
-}) => MaterialApp(
-    home: MultiProvider(
-      providers: [
-        if (counterNotifier != null)
-          ChangeNotifierProvider<CounterNotifier>.value(value: counterNotifier),
-        if (simpleNotifier != null)
-          ChangeNotifierProvider<SimpleNotifier>.value(value: simpleNotifier),
-      ],
-      child: child,
-    ),
-  );
+}) =>
+    MaterialApp(
+      home: MultiProvider(
+        providers: [
+          if (counterNotifier != null)
+            ChangeNotifierProvider<CounterNotifier>.value(
+                value: counterNotifier),
+          if (simpleNotifier != null)
+            ChangeNotifierProvider<SimpleNotifier>.value(value: simpleNotifier),
+        ],
+        child: child,
+      ),
+    );
