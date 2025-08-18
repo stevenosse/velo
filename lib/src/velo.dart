@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 /// A state management class that extends [ValueNotifier] with [Equatable] support.
 /// 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:velo/velo.dart';
+import '../velo.dart';
 
 /// A widget that listens to a [Velo] and rebuilds whenever the state changes.
 /// 
@@ -31,9 +31,6 @@ import 'package:velo/velo.dart';
 /// )
 /// ```
 class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
-  final N? notifier;
-  final Widget Function(BuildContext context, T state) builder;
-  final Widget? loadingWidget;
 
   const VeloBuilder({
     super.key,
@@ -41,6 +38,9 @@ class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
     required this.builder,
     this.loadingWidget,
   });
+  final N? notifier;
+  final Widget Function(BuildContext context, T state) builder;
+  final Widget? loadingWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +52,14 @@ class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
         builder: (context, state, _) {
           try {
             return builder(context, state);
-          } catch (error) {
+          } on Exception catch (error) {
             debugPrint('VeloBuilder: Error in builder callback: $error');
             return loadingWidget ?? const SizedBox.shrink();
           }
         },
       );
-    } catch (error) {
-      debugPrint('VeloBuilder: Failed to find notifier of type $N in widget tree');
+    } on Exception catch (error) {
+      debugPrint('VeloBuilder: Failed to find notifier of type $N in widget tree: $error');
       return loadingWidget ?? const SizedBox.shrink();
     }
   }

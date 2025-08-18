@@ -1,48 +1,42 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:equatable/equatable.dart';
 import 'package:velo/velo.dart';
 
-Widget buildText(BuildContext context, CounterState state) {
-  return Text('Count: ${state.count}');
-}
+Widget buildText(BuildContext context, CounterState state) => Text('Count: ${state.count}');
 
 class CounterState extends Equatable {
-  final int count;
-  final bool isLoading;
-  final String? error;
 
   const CounterState({
     this.count = 0,
     this.isLoading = false,
     this.error,
   });
+  final int count;
+  final bool isLoading;
+  final String? error;
 
   CounterState copyWith({
     int? count,
     bool? isLoading,
     String? error,
-  }) {
-    return CounterState(
+  }) => CounterState(
       count: count ?? this.count,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
     );
-  }
 
   @override
   List<Object?> get props => [count, isLoading, error];
 }
 
 class SimpleState {
-  final int value;
   const SimpleState(this.value);
+  final int value;
 
   @override
-  bool operator ==(Object other) {
-    return other is SimpleState && other.value == value;
-  }
+  bool operator ==(Object other) => other is SimpleState && other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -94,8 +88,7 @@ Widget createTestWidget({
   required Widget child,
   CounterNotifier? counterNotifier,
   SimpleNotifier? simpleNotifier,
-}) {
-  return MaterialApp(
+}) => MaterialApp(
     home: MultiProvider(
       providers: [
         if (counterNotifier != null)
@@ -106,4 +99,3 @@ Widget createTestWidget({
       child: child,
     ),
   );
-}

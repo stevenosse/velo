@@ -30,9 +30,9 @@ void main() {
 
     test('should not emit if state is equal (Equatable)', () {
       var emissionCount = 0;
-      notifier.addListener(() => emissionCount++);
-
-      notifier.emit(const CounterState());
+      notifier
+        ..addListener(() => emissionCount++)
+        ..emit(const CounterState());
       expect(emissionCount, 0);
 
       notifier.increment();
@@ -60,23 +60,23 @@ void main() {
       notifier.addListener(() => emissionCount++);
 
       final initialState = notifier.state;
-      
+
       notifier.emit(initialState);
       expect(emissionCount, 0);
 
-      notifier.emit(const CounterState(count: 0, isLoading: false));
+      notifier.emit(const CounterState());
       expect(emissionCount, 0);
     });
 
     test('should handle concurrent async operations', () async {
       final futures = <Future<void>>[];
-      
+
       for (int i = 0; i < 5; i++) {
         futures.add(notifier.incrementAsync());
       }
-      
+
       await Future.wait(futures);
-      
+
       expect(notifier.state.count, 5);
     });
 
@@ -94,9 +94,9 @@ void main() {
 
     test('should notify listeners on state change', () {
       var notificationCount = 0;
-      notifier.addListener(() => notificationCount++);
-
-      notifier.increment();
+      notifier
+        ..addListener(() => notificationCount++)
+        ..increment();
       expect(notificationCount, 1);
 
       notifier.increment();
@@ -117,9 +117,9 @@ void main() {
 
     test('should emit only when state actually changes', () {
       var emissionCount = 0;
-      notifier.addListener(() => emissionCount++);
-
-      notifier.setValue(0);
+      notifier
+        ..addListener(() => emissionCount++)
+        ..setValue(0);
       expect(emissionCount, 0);
 
       notifier.setValue(1);

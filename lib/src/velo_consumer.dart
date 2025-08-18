@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:velo/src/velo.dart';
+
+import '../velo.dart' show VeloBuilder, VeloListener;
+import 'velo.dart';
 
 /// A widget that combines [VeloBuilder] and [VeloListener] functionality.
 /// 
@@ -32,9 +34,6 @@ import 'package:velo/src/velo.dart';
 /// not on every rebuild. This is efficient for side effects like navigation
 /// or showing dialogs.
 class VeloConsumer<N extends Velo<T>, T> extends StatefulWidget {
-  final N? notifier;
-  final Widget Function(BuildContext context, T state) builder;
-  final void Function(BuildContext context, T state)? listener;
 
   const VeloConsumer({
     super.key,
@@ -42,6 +41,9 @@ class VeloConsumer<N extends Velo<T>, T> extends StatefulWidget {
     required this.builder,
     this.listener,
   });
+  final N? notifier;
+  final Widget Function(BuildContext context, T state) builder;
+  final void Function(BuildContext context, T state)? listener;
 
   @override
   State<VeloConsumer<N, T>> createState() => _VeloConsumerState<N, T>();
@@ -84,12 +86,12 @@ class _VeloConsumerState<N extends Velo<T>, T> extends State<VeloConsumer<N, T>>
         if (widget.listener != null && oldState != notifier.state && mounted) {
           try {
             widget.listener!.call(context, notifier.state);
-          } catch (error) {
+          } on Exception catch (error) {
             debugPrint('VeloConsumer: Error in listener callback during update: $error');
           }
         }
       }
-    } catch (error) {
+    } on Exception catch (error) {
       debugPrint('VeloConsumer: Error updating notifier: $error');
     }
   }
@@ -101,20 +103,18 @@ class _VeloConsumerState<N extends Velo<T>, T> extends State<VeloConsumer<N, T>>
       try {
         widget.listener!.call(context, currentState);
         previousState = currentState;
-      } catch (error) {
+      } on Exception catch (error) {
         debugPrint('VeloConsumer: Error in listener callback: $error');
       }
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<T>(
+  Widget build(BuildContext context) => ValueListenableBuilder<T>(
       valueListenable: notifier,
       builder: (context, state, _) {
         _callListenerIfNeeded(state);
         return widget.builder(context, state);
       },
     );
-  }
 }

@@ -21,7 +21,8 @@ void main() {
               builder: (context) {
                 final counter = context.read<CounterNotifier>();
                 final simple = context.read<SimpleNotifier>();
-                return Text('Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                return Text(
+                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
               },
             ),
           ),
@@ -40,7 +41,7 @@ void main() {
     testWidgets('should provide access to all notifiers', (tester) async {
       final notifier1 = CounterNotifier();
       final notifier2 = SimpleNotifier();
-      
+
       notifier1.increment();
       notifier2.setValue(5);
 
@@ -55,7 +56,8 @@ void main() {
               builder: (context) {
                 final counter = context.watch<CounterNotifier>();
                 final simple = context.watch<SimpleNotifier>();
-                return Text('Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                return Text(
+                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
               },
             ),
           ),
@@ -80,8 +82,7 @@ void main() {
     });
 
     testWidgets('should handle single provider', (tester) async {
-      final notifier = CounterNotifier();
-      notifier.increment();
+      final notifier = CounterNotifier()..increment();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -107,10 +108,9 @@ void main() {
     testWidgets('should support nested MultiVeloListener', (tester) async {
       final notifier1 = CounterNotifier();
       final notifier2 = SimpleNotifier();
-      final notifier3 = CounterNotifier();
-      
-      notifier3.increment();
-      notifier3.increment();
+      final notifier3 = CounterNotifier()
+        ..increment()
+        ..increment();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -126,7 +126,8 @@ void main() {
                 builder: (context) {
                   final counter = context.watch<CounterNotifier>();
                   final simple = context.watch<SimpleNotifier>();
-                  return Text('Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                  return Text(
+                      'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
                 },
               ),
             ),
@@ -157,8 +158,9 @@ void main() {
                 try {
                   final counter = context.read<CounterNotifier>();
                   final simple = context.read<SimpleNotifier>();
-                  return Text('Counter: ${counter.state.count}, Simple: ${simple.state.value}');
-                } catch (e) {
+                  return Text(
+                      'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                } on Exception {
                   return const Text('Error accessing providers');
                 }
               },

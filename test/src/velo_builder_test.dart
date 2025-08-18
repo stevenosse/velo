@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
 import 'package:velo/velo.dart';
 import '../helpers/test_helpers.dart';
 
@@ -13,9 +12,7 @@ void main() {
         createTestWidget(
           counterNotifier: notifier,
           child: VeloBuilder<CounterNotifier, CounterState>(
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -71,9 +68,7 @@ void main() {
           counterNotifier: notifier,
           child: VeloBuilder<CounterNotifier, CounterState>(
             loadingWidget: const Text('Loading'),
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -88,19 +83,14 @@ void main() {
 
     testWidgets('should rebuild when notifier changes', (tester) async {
       final notifier1 = CounterNotifier();
-      final notifier2 = CounterNotifier();
-      notifier2.increment();
+      final notifier2 = CounterNotifier()..increment();
 
-      Widget buildWithNotifier(CounterNotifier notifier) {
-        return createTestWidget(
-          counterNotifier: notifier,
-          child: VeloBuilder<CounterNotifier, CounterState>(
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
-          ),
-        );
-      }
+      Widget buildWithNotifier(CounterNotifier notifier) => createTestWidget(
+            counterNotifier: notifier,
+            child: VeloBuilder<CounterNotifier, CounterState>(
+              builder: (context, state) => Text('Count: ${state.count}'),
+            ),
+          );
 
       await tester.pumpWidget(buildWithNotifier(notifier1));
       expect(find.text('Count: 0'), findsOneWidget);
@@ -140,16 +130,13 @@ void main() {
     });
 
     testWidgets('should pass notifier directly when provided', (tester) async {
-      final notifier = CounterNotifier();
-      notifier.increment();
+      final notifier = CounterNotifier()..increment();
 
       await tester.pumpWidget(
         MaterialApp(
           home: VeloBuilder<CounterNotifier, CounterState>(
             notifier: notifier,
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );

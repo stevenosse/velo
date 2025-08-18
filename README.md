@@ -1,13 +1,7 @@
 # Velo 🚴‍♂️
 
-[![CI](https://github.com/username/velo/actions/workflows/ci.yml/badge.svg)](https://github.com/username/velo/actions/workflows/ci.yml)
-[![Coverage](https://github.com/username/velo/actions/workflows/coverage.yml/badge.svg)](https://github.com/username/velo/actions/workflows/coverage.yml)
-[![Quality](https://github.com/username/velo/actions/workflows/quality.yml/badge.svg)](https://github.com/username/velo/actions/workflows/quality.yml)
-[![codecov](https://codecov.io/gh/username/velo/branch/main/graph/badge.svg)](https://codecov.io/gh/username/velo)
-
 [![pub package](https://img.shields.io/pub/v/velo.svg)](https://pub.dev/packages/velo)
 [![pub points](https://img.shields.io/pub/points/velo)](https://pub.dev/packages/velo/score)
-[![popularity](https://img.shields.io/pub/popularity/velo)](https://pub.dev/packages/velo/score)
 [![likes](https://img.shields.io/pub/likes/velo)](https://pub.dev/packages/velo/score)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -247,7 +241,7 @@ MultiVeloListener(
 )
 ```
 
-## 💡 Best Practices
+## 💡 Best practices
 
 1. **Immutable States** : Always use `copyWith()` to create new states
 2. **Equatable** : Implement `Equatable` to avoid unnecessary rebuilds  
@@ -294,7 +288,7 @@ void main() {
 | Performance | Excellent | Excellent |
 | Features | Essential | Complete |
 
-## 🔍 Code Quality
+## 🔍 Code quality
 
 Velo maintains high code quality standards:
 
@@ -304,19 +298,11 @@ Velo maintains high code quality standards:
 - **Security Scanning**: Regular security vulnerability checks
 - **Documentation**: Comprehensive API documentation
 
-### Quality Metrics
-
-- ✅ All tests pass on multiple platforms (Linux, macOS, Windows)
-- ✅ Zero linter warnings or errors
-- ✅ 100% documented public API
-- ✅ Semantic versioning
-- ✅ Changelog maintained
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-### Development Setup
+### Development setup
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/yourusername/velo.git`

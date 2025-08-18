@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:equatable/equatable.dart';
-import 'package:velo/src/velo.dart';
+
+import 'velo.dart';
 
 /// A widget that listens to changes in a Velo without rebuilding.
 ///
@@ -46,7 +47,7 @@ class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloList
       state = newState;
       try {
         widget.listener(context, newState);
-      } catch (error) {
+      } on Exception catch (error) {
         debugPrint('VeloListener: Error in listener callback: $error');
       }
     }
@@ -63,14 +64,12 @@ class _VeloListenerState<N extends Velo<T>, T> extends SingleChildState<VeloList
   void dispose() {
     try {
       notifier.removeListener(_handleStateChange);
-    } catch (error) {
-      debugPrint('VeloListener: Error removing listener during dispose');
+    } on Exception catch (error) {
+      debugPrint('VeloListener: Error removing listener during dispose: $error');
     }
     super.dispose();
   }
 
   @override
-  Widget buildWithChild(BuildContext context, Widget? child) {
-    return child ?? const SizedBox.shrink();
-  }
+  Widget buildWithChild(BuildContext context, Widget? child) => child ?? const SizedBox.shrink();
 }

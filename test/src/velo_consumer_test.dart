@@ -16,9 +16,7 @@ void main() {
             listener: (context, state) {
               listenerCallCount++;
             },
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -66,33 +64,29 @@ void main() {
       notifier.dispose();
     });
 
-    testWidgets('should handle notifier change in didUpdateWidget', (tester) async {
+    testWidgets('should handle notifier change in didUpdateWidget',
+        (tester) async {
       final notifier1 = CounterNotifier();
-      final notifier2 = CounterNotifier();
-      notifier2.increment();
-      notifier2.increment();
+      final notifier2 = CounterNotifier()
+        ..increment()
+        ..increment();
 
       var listenerCallCount = 0;
       CounterState? lastListenerState;
 
-      Widget buildWithNotifier(CounterNotifier notifier) {
-        return createTestWidget(
-          counterNotifier: notifier,
-          child: VeloConsumer<CounterNotifier, CounterState>(
-            listener: (context, state) {
-              listenerCallCount++;
-              lastListenerState = state;
-            },
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
-          ),
-        );
-      }
+      Widget buildWithNotifier(CounterNotifier notifier) => createTestWidget(
+            counterNotifier: notifier,
+            child: VeloConsumer<CounterNotifier, CounterState>(
+              listener: (context, state) {
+                listenerCallCount++;
+                lastListenerState = state;
+              },
+              builder: (context, state) => Text('Count: ${state.count}'),
+            ),
+          );
 
       await tester.pumpWidget(buildWithNotifier(notifier1));
       expect(find.text('Count: 0'), findsOneWidget);
-
 
       await tester.pumpWidget(buildWithNotifier(notifier2));
       expect(find.text('Count: 2'), findsOneWidget);
@@ -115,9 +109,7 @@ void main() {
             listener: (context, state) {
               listenerCallCount++;
             },
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -138,8 +130,7 @@ void main() {
     });
 
     testWidgets('should work with provided notifier', (tester) async {
-      final notifier = CounterNotifier();
-      notifier.increment();
+      final notifier = CounterNotifier()..increment();
       var listenerCallCount = 0;
 
       await tester.pumpWidget(
@@ -149,9 +140,7 @@ void main() {
             listener: (context, state) {
               listenerCallCount++;
             },
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -176,9 +165,7 @@ void main() {
         createTestWidget(
           counterNotifier: notifier,
           child: VeloConsumer<CounterNotifier, CounterState>(
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
@@ -200,9 +187,7 @@ void main() {
         createTestWidget(
           counterNotifier: notifier,
           child: VeloConsumer<CounterNotifier, CounterState>(
-            builder: (context, state) {
-              return Text('Count: ${state.count}');
-            },
+            builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),
       );
