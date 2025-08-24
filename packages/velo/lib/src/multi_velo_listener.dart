@@ -43,8 +43,11 @@ class MultiVeloListener extends StatelessWidget {
   ///
   /// The [listeners] and [child] parameters must not be null.
   /// The [listeners] list must contain at least one provider.
-  const MultiVeloListener(
-      {super.key, required this.child, required this.listeners});
+  const MultiVeloListener({
+    super.key,
+    required this.child,
+    required this.listeners,
+  });
 
   /// The widget subtree that will have access to the provided [Velo] instances.
   final Widget child;
@@ -55,8 +58,6 @@ class MultiVeloListener extends StatelessWidget {
   final List<SingleChildWidget> listeners;
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: listeners,
-        child: child,
-      );
+  Widget build(BuildContext context) =>
+      MultiProvider(providers: listeners, child: child);
 }

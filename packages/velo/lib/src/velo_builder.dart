@@ -59,7 +59,8 @@ class VeloBuilder<N extends Velo<T>, T> extends StatelessWidget {
       );
     } on Exception catch (error) {
       debugPrint(
-          'VeloBuilder: Failed to find notifier of type $N in widget tree: $error');
+        'VeloBuilder: Failed to find notifier of type $N in widget tree: $error',
+      );
       return loadingWidget ?? const SizedBox.shrink();
     }
   }

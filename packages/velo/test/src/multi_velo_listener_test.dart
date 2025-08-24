@@ -22,7 +22,8 @@ void main() {
                 final counter = context.read<CounterNotifier>();
                 final simple = context.read<SimpleNotifier>();
                 return Text(
-                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                  'Counter: ${counter.state.count}, Simple: ${simple.state.value}',
+                );
               },
             ),
           ),
@@ -57,7 +58,8 @@ void main() {
                 final counter = context.watch<CounterNotifier>();
                 final simple = context.watch<SimpleNotifier>();
                 return Text(
-                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                  'Counter: ${counter.state.count}, Simple: ${simple.state.value}',
+                );
               },
             ),
           ),
@@ -127,7 +129,8 @@ void main() {
                   final counter = context.watch<CounterNotifier>();
                   final simple = context.watch<SimpleNotifier>();
                   return Text(
-                      'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}',
+                  );
                 },
               ),
             ),
@@ -159,7 +162,8 @@ void main() {
                   final counter = context.read<CounterNotifier>();
                   final simple = context.read<SimpleNotifier>();
                   return Text(
-                      'Counter: ${counter.state.count}, Simple: ${simple.state.value}');
+                    'Counter: ${counter.state.count}, Simple: ${simple.state.value}',
+                  );
                 } on Exception {
                   return const Text('Error accessing providers');
                 }

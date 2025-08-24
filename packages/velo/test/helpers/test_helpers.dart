@@ -8,20 +8,12 @@ Widget buildText(BuildContext context, CounterState state) =>
     Text('Count: ${state.count}');
 
 class CounterState extends Equatable {
-  const CounterState({
-    this.count = 0,
-    this.isLoading = false,
-    this.error,
-  });
+  const CounterState({this.count = 0, this.isLoading = false, this.error});
   final int count;
   final bool isLoading;
   final String? error;
 
-  CounterState copyWith({
-    int? count,
-    bool? isLoading,
-    String? error,
-  }) =>
+  CounterState copyWith({int? count, bool? isLoading, String? error}) =>
       CounterState(
         count: count ?? this.count,
         isLoading: isLoading ?? this.isLoading,
@@ -64,17 +56,21 @@ class CounterNotifier extends Velo<CounterState> {
   }
 
   Future<void> incrementAsync() async {
-    await emitAsync(Future.delayed(
-      const Duration(milliseconds: 100),
-      () => state.copyWith(count: state.count + 1),
-    ));
+    await emitAsync(
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => state.copyWith(count: state.count + 1),
+      ),
+    );
   }
 
   Future<void> incrementAsyncWithError() async {
-    await emitAsync(Future.delayed(
-      const Duration(milliseconds: 100),
-      () => throw Exception('Async error'),
-    ));
+    await emitAsync(
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => throw Exception('Async error'),
+      ),
+    );
   }
 }
 
@@ -90,16 +86,14 @@ Widget createTestWidget({
   required Widget child,
   CounterNotifier? counterNotifier,
   SimpleNotifier? simpleNotifier,
-}) =>
-    MaterialApp(
-      home: MultiProvider(
-        providers: [
-          if (counterNotifier != null)
-            ChangeNotifierProvider<CounterNotifier>.value(
-                value: counterNotifier),
-          if (simpleNotifier != null)
-            ChangeNotifierProvider<SimpleNotifier>.value(value: simpleNotifier),
-        ],
-        child: child,
-      ),
-    );
+}) => MaterialApp(
+  home: MultiProvider(
+    providers: [
+      if (counterNotifier != null)
+        ChangeNotifierProvider<CounterNotifier>.value(value: counterNotifier),
+      if (simpleNotifier != null)
+        ChangeNotifierProvider<SimpleNotifier>.value(value: simpleNotifier),
+    ],
+    child: child,
+  ),
+);

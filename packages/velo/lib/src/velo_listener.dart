@@ -38,7 +38,8 @@ class _VeloListenerState<N extends Velo<T>, T>
       notifier.addListener(_handleStateChange);
     } catch (error) {
       debugPrint(
-          'VeloListener: Failed to find notifier of type $N in widget tree');
+        'VeloListener: Failed to find notifier of type $N in widget tree',
+      );
       rethrow;
     }
   }
@@ -68,7 +69,8 @@ class _VeloListenerState<N extends Velo<T>, T>
       notifier.removeListener(_handleStateChange);
     } on Exception catch (error) {
       debugPrint(
-          'VeloListener: Error removing listener during dispose: $error');
+        'VeloListener: Error removing listener during dispose: $error',
+      );
     }
     super.dispose();
   }

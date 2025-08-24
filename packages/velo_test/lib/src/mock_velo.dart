@@ -33,8 +33,8 @@ class MockVelo<T> extends Velo<T> {
   /// Returns a copy to prevent external modification.
   List<T> get emittedStates {
     _checkNotDisposed();
-    return _stateHistory.length > 1 
-        ? List<T>.unmodifiable(_stateHistory.skip(1)) 
+    return _stateHistory.length > 1
+        ? List<T>.unmodifiable(_stateHistory.skip(1))
         : <T>[];
   }
 
@@ -55,7 +55,9 @@ class MockVelo<T> extends Velo<T> {
     if (_stateHistory.length > _maxHistorySize) {
       // Remove oldest states but keep some history
       const keepCount = _maxHistorySize ~/ 2;
-      final statesToKeep = _stateHistory.skip(_stateHistory.length - keepCount).toList();
+      final statesToKeep = _stateHistory
+          .skip(_stateHistory.length - keepCount)
+          .toList();
       _stateHistory
         ..clear()
         ..addAll(statesToKeep);

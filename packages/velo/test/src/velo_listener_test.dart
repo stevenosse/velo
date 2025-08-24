@@ -109,8 +109,9 @@ void main() {
       notifier.dispose();
     });
 
-    testWidgets('should continue listening after widget update',
-        (tester) async {
+    testWidgets('should continue listening after widget update', (
+      tester,
+    ) async {
       final notifier = CounterNotifier();
 
       var listenerCallCount = 0;

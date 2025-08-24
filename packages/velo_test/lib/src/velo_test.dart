@@ -105,8 +105,8 @@ void veloTest<V extends Velo<S>, S>(
             final List<S> expectedStates = expected is List<S>
                 ? expected
                 : expected is Iterable<S>
-                    ? expected.toList()
-                    : <S>[expected as S];
+                ? expected.toList()
+                : <S>[expected as S];
 
             final List<S> actualStates = skip > 0
                 ? states.skip(skip).toList()
@@ -121,16 +121,18 @@ void veloTest<V extends Velo<S>, S>(
 
           if (errors != null) {
             final dynamic expectedErrors = errors();
-            final List<test.Matcher> expectedErrorMatchers = expectedErrors is List
+            final List<test.Matcher> expectedErrorMatchers =
+                expectedErrors is List
                 ? expectedErrors.cast<test.Matcher>()
                 : expectedErrors is Iterable
-                    ? expectedErrors.cast<test.Matcher>().toList()
-                    : <test.Matcher>[expectedErrors as test.Matcher];
+                ? expectedErrors.cast<test.Matcher>().toList()
+                : <test.Matcher>[expectedErrors as test.Matcher];
 
             test.expect(
               veloErrors.length,
               test.equals(expectedErrorMatchers.length),
-              reason: 'Expected ${expectedErrorMatchers.length} errors but got ${veloErrors.length}',
+              reason:
+                  'Expected ${expectedErrorMatchers.length} errors but got ${veloErrors.length}',
             );
 
             for (int i = 0; i < expectedErrorMatchers.length; i++) {
@@ -152,4 +154,3 @@ void veloTest<V extends Velo<S>, S>(
     timeout: timeout != null ? test.Timeout(timeout) : null,
   );
 }
-

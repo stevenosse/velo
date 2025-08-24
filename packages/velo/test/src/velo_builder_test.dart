@@ -86,11 +86,11 @@ void main() {
       final notifier2 = CounterNotifier()..increment();
 
       Widget buildWithNotifier(CounterNotifier notifier) => createTestWidget(
-            counterNotifier: notifier,
-            child: VeloBuilder<CounterNotifier, CounterState>(
-              builder: (context, state) => Text('Count: ${state.count}'),
-            ),
-          );
+        counterNotifier: notifier,
+        child: VeloBuilder<CounterNotifier, CounterState>(
+          builder: (context, state) => Text('Count: ${state.count}'),
+        ),
+      );
 
       await tester.pumpWidget(buildWithNotifier(notifier1));
       expect(find.text('Count: 0'), findsOneWidget);

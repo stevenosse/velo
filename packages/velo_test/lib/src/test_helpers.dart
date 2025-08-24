@@ -6,21 +6,13 @@ import 'package:velo/velo.dart';
 
 /// A simple counter state for testing purposes.
 class CounterState extends Equatable {
-  const CounterState({
-    this.count = 0,
-    this.isLoading = false,
-    this.error,
-  });
-  
+  const CounterState({this.count = 0, this.isLoading = false, this.error});
+
   final int count;
   final bool isLoading;
   final String? error;
 
-  CounterState copyWith({
-    int? count,
-    bool? isLoading,
-    String? error,
-  }) =>
+  CounterState copyWith({int? count, bool? isLoading, String? error}) =>
       CounterState(
         count: count ?? this.count,
         isLoading: isLoading ?? this.isLoading,
@@ -65,17 +57,21 @@ class CounterVelo extends Velo<CounterState> {
   }
 
   Future<void> incrementAsync() async {
-    await emitAsync(Future.delayed(
-      const Duration(milliseconds: 100),
-      () => state.copyWith(count: state.count + 1),
-    ));
+    await emitAsync(
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => state.copyWith(count: state.count + 1),
+      ),
+    );
   }
 
   Future<void> incrementAsyncWithError() async {
-    await emitAsync(Future.delayed(
-      const Duration(milliseconds: 100),
-      () => throw Exception('Async error'),
-    ));
+    await emitAsync(
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => throw Exception('Async error'),
+      ),
+    );
   }
 }
 
@@ -97,18 +93,17 @@ Widget createTestWidget({
   required Widget child,
   CounterVelo? counterVelo,
   SimpleVelo? simpleVelo,
-}) =>
-    MaterialApp(
-      home: MultiProvider(
-        providers: [
-          if (counterVelo != null)
-            ChangeNotifierProvider<CounterVelo>.value(value: counterVelo),
-          if (simpleVelo != null)
-            ChangeNotifierProvider<SimpleVelo>.value(value: simpleVelo),
-        ],
-        child: child,
-      ),
-    );
+}) => MaterialApp(
+  home: MultiProvider(
+    providers: [
+      if (counterVelo != null)
+        ChangeNotifierProvider<CounterVelo>.value(value: counterVelo),
+      if (simpleVelo != null)
+        ChangeNotifierProvider<SimpleVelo>.value(value: simpleVelo),
+    ],
+    child: child,
+  ),
+);
 
 /// Pumps a widget and waits for all animations and microtasks to complete.
 Future<void> pumpAndSettle(WidgetTester tester, Widget widget) async {
@@ -123,15 +118,12 @@ Future<void> waitForCondition(
   Duration interval = const Duration(milliseconds: 100),
 }) async {
   final stopwatch = Stopwatch()..start();
-  
+
   while (!condition() && stopwatch.elapsed < timeout) {
     await Future<void>.delayed(interval);
   }
-  
+
   if (!condition()) {
-    throw Exception(
-      'Condition was not met within ${timeout.inMilliseconds}ms',
-    );
+    throw Exception('Condition was not met within ${timeout.inMilliseconds}ms');
   }
 }
-

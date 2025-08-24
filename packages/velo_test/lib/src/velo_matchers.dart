@@ -17,7 +17,11 @@ class VeloMatchers {
   static Matcher emitsAnyOf<S>(List<S> expectedStates) {
     ArgumentError.checkNotNull(expectedStates, 'expectedStates');
     if (expectedStates.isEmpty) {
-      throw ArgumentError.value(expectedStates, 'expectedStates', 'Cannot be empty');
+      throw ArgumentError.value(
+        expectedStates,
+        'expectedStates',
+        'Cannot be empty',
+      );
     }
     return _EmitsAnyOfMatcher<S>(expectedStates);
   }
@@ -32,7 +36,11 @@ class VeloMatchers {
   static Matcher emitsCount(int expectedCount) {
     ArgumentError.checkNotNull(expectedCount, 'expectedCount');
     if (expectedCount < 0) {
-      throw ArgumentError.value(expectedCount, 'expectedCount', 'Cannot be negative');
+      throw ArgumentError.value(
+        expectedCount,
+        'expectedCount',
+        'Cannot be negative',
+      );
     }
     return _EmitsCountMatcher(expectedCount);
   }
@@ -47,7 +55,7 @@ class VeloMatchers {
 /// Matcher that checks if states are emitted in the expected order.
 class _EmitsInOrderMatcher<S> extends Matcher {
   const _EmitsInOrderMatcher(this.expectedStates);
-  
+
   final List<S> expectedStates;
 
   @override
@@ -56,21 +64,21 @@ class _EmitsInOrderMatcher<S> extends Matcher {
       matchState['error'] = 'Expected List<$S> but got ${item.runtimeType}';
       return false;
     }
-    
+
     if (item.length != expectedStates.length) {
-      matchState['error'] = 
+      matchState['error'] =
           'Expected ${expectedStates.length} states but got ${item.length}';
       return false;
     }
-    
+
     for (int i = 0; i < expectedStates.length; i++) {
       if (item[i] != expectedStates[i]) {
-        matchState['error'] = 
+        matchState['error'] =
             'State at index $i: expected ${expectedStates[i]} but got ${item[i]}';
         return false;
       }
     }
-    
+
     return true;
   }
 
@@ -95,19 +103,19 @@ class _EmitsInOrderMatcher<S> extends Matcher {
 
 /// Matcher that checks if any of the expected states are emitted.
 class _EmitsAnyOfMatcher<S> extends Matcher {
-
   const _EmitsAnyOfMatcher(this.expectedStates);
   final List<S> expectedStates;
 
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     if (item is! List<S>) return false;
-    
+
     return item.any((state) => expectedStates.contains(state));
   }
 
   @override
-  Description describe(Description description) => description.add('emits any of: $expectedStates');
+  Description describe(Description description) =>
+      description.add('emits any of: $expectedStates');
 
   @override
   Description describeMismatch(
@@ -120,19 +128,19 @@ class _EmitsAnyOfMatcher<S> extends Matcher {
 
 /// Matcher that checks if a Velo notifier has the expected current state.
 class _HasStateMatcher<S> extends Matcher {
-
   const _HasStateMatcher(this.expectedState);
   final S expectedState;
 
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     if (item is! Velo<S>) return false;
-    
+
     return item.state == expectedState;
   }
 
   @override
-  Description describe(Description description) => description.add('has state: $expectedState');
+  Description describe(Description description) =>
+      description.add('has state: $expectedState');
 
   @override
   Description describeMismatch(
@@ -150,19 +158,19 @@ class _HasStateMatcher<S> extends Matcher {
 
 /// Matcher that checks if the expected number of states are emitted.
 class _EmitsCountMatcher extends Matcher {
-
   const _EmitsCountMatcher(this.expectedCount);
   final int expectedCount;
 
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     if (item is! List) return false;
-    
+
     return item.length == expectedCount;
   }
 
   @override
-  Description describe(Description description) => description.add('emits $expectedCount states');
+  Description describe(Description description) =>
+      description.add('emits $expectedCount states');
 
   @override
   Description describeMismatch(
@@ -180,19 +188,19 @@ class _EmitsCountMatcher extends Matcher {
 
 /// Matcher that checks if emitted states satisfy a predicate.
 class _EmitsWhereMatcher<S> extends Matcher {
-
   const _EmitsWhereMatcher(this.predicate);
   final bool Function(S state) predicate;
 
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     if (item is! List<S>) return false;
-    
+
     return item.every(predicate);
   }
 
   @override
-  Description describe(Description description) => description.add('emits states that satisfy the predicate');
+  Description describe(Description description) =>
+      description.add('emits states that satisfy the predicate');
 
   @override
   Description describeMismatch(
@@ -223,11 +231,11 @@ class VeloTestUtils {
     }
 
     if (velo.state == expectedState) return;
-    
+
     final completer = Completer<void>();
     late void Function() listener;
     Timer? timeoutTimer;
-    
+
     listener = () {
       try {
         if (velo.state == expectedState) {
@@ -245,9 +253,9 @@ class VeloTestUtils {
         }
       }
     };
-    
+
     velo.addListener(listener);
-    
+
     // Set up timeout
     timeoutTimer = Timer(timeout, () {
       velo.removeListener(listener);
@@ -260,7 +268,7 @@ class VeloTestUtils {
         );
       }
     });
-    
+
     return completer.future;
   }
 
@@ -271,10 +279,10 @@ class VeloTestUtils {
     Duration timeout = const Duration(seconds: 5),
   }) async {
     if (predicate(velo.state)) return velo.state;
-    
+
     final completer = Completer<S>();
     late void Function() listener;
-    
+
     listener = () {
       if (predicate(velo.state)) {
         velo.removeListener(listener);
@@ -283,9 +291,9 @@ class VeloTestUtils {
         }
       }
     };
-    
+
     velo.addListener(listener);
-    
+
     // Set up timeout
     Timer(timeout, () {
       velo.removeListener(listener);
@@ -298,7 +306,7 @@ class VeloTestUtils {
         );
       }
     });
-    
+
     return completer.future;
   }
 
@@ -308,13 +316,13 @@ class VeloTestUtils {
     Future<void> Function() action,
   ) async {
     final states = <S>[];
-    
+
     void listener() {
       states.add(velo.state);
     }
-    
+
     velo.addListener(listener);
-    
+
     try {
       await action();
       return states;

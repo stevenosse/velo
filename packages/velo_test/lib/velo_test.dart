@@ -61,12 +61,10 @@ Matcher emitsAnyOf<S>(List<S> expectedStates) =>
     VeloMatchers.emitsAnyOf<S>(expectedStates);
 
 /// Matches when a Velo notifier's current state equals the expected state.
-Matcher hasState<S>(S expectedState) =>
-    VeloMatchers.hasState<S>(expectedState);
+Matcher hasState<S>(S expectedState) => VeloMatchers.hasState<S>(expectedState);
 
 /// Matches when a Velo notifier emits exactly the expected number of states.
-Matcher emitsCount(int expectedCount) =>
-    VeloMatchers.emitsCount(expectedCount);
+Matcher emitsCount(int expectedCount) => VeloMatchers.emitsCount(expectedCount);
 
 /// Matches when a Velo notifier emits states that satisfy the given predicate.
 Matcher emitsWhere<S>(bool Function(S state) predicate) =>
