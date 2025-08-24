@@ -30,14 +30,14 @@ Testing utilities and helpers for the Velo state management package.
 - ⏱️ **Async testing**: Support for testing async state changes
 - 📈 **Test coverage**: Comprehensive testing utilities
 
-## Quick Start
+## Quick start
 
 For detailed usage instructions and examples, please refer to the individual package documentation:
 
-- **[Velo Package Documentation](packages/velo/README.md)** - Core state management functionality
-- **[Velo Test Package Documentation](packages/velo_test/README.md)** - Testing utilities and helpers
+- **[Velo package documentation](packages/velo/README.md)** - Core state management functionality
+- **[Velo test package documentation](packages/velo_test/README.md)** - Testing utilities and helpers
 
-### Basic Example
+### Basic example
 
 Here's a simple counter example using Velo:
 
@@ -105,7 +105,7 @@ flutter pub get
 
 ## 📚 Usage
 
-### 1. Define a State
+### 1. Define a state
 
 Create your state class by extending `Equatable`:
 
@@ -168,9 +168,9 @@ class CounterVelo extends Velo<CounterState> {
 }
 ```
 
-### 3. Use with Widgets
+### 3. Use with widgets
 
-#### VeloBuilder - For UI Rebuilding
+#### VeloBuilder - For UI rebuilding
 
 ```dart
 import 'package:flutter/material.dart';
@@ -215,7 +215,7 @@ class CounterPage extends StatelessWidget {
 }
 ```
 
-#### VeloListener - For Side Effects
+#### VeloListener - For side effects
 
 ```dart
 VeloListener<CounterVelo, CounterState>(
@@ -234,7 +234,7 @@ VeloListener<CounterVelo, CounterState>(
 )
 ```
 
-#### VeloConsumer - Combined Builder + Listener
+#### VeloConsumer - Combined builder + listener
 
 ```dart
 VeloConsumer<CounterVelo, CounterState>(
@@ -255,14 +255,14 @@ VeloConsumer<CounterVelo, CounterState>(
 
 ## 🔧 API Reference
 
-### Velo&lt;S&gt;
+### Velo<S>
 
-Abstract main class that extends `ValueNotifier&lt;S&gt;`.
+Abstract main class that extends `ValueNotifier<S>`.
 
 #### Methods
 
 - `emit(S state)` : Emits a new state if different from the previous one
-- `emitAsync(Future&lt;S&gt; futureState)` : Emits a state from a Future
+- `emitAsync(Future<S> futureState)` : Emits a state from a Future
 - `S get state` : Gets the current state
 
 ### Widgets
@@ -320,36 +320,7 @@ MultiVeloListener(
 2. **Equatable** : Implement `Equatable` to avoid unnecessary rebuilds  
 3. **Dispose** : Don't forget to dispose your Velos with Provider
 4. **Separation** : One Velo per business domain
-5. **Testing** : Test your Velos as simple Dart classes
-
-## 🧪 Testing
-
-```dart
-import 'package:flutter_test/flutter_test.dart';
-
-void main() {
-  group('CounterVelo', () {
-    late CounterVelo counterVelo;
-
-    setUp(() {
-      counterVelo = CounterVelo();
-    });
-
-    tearDown(() {
-      counterVelo.dispose();
-    });
-
-    test('initial state', () {
-      expect(counterVelo.state, const CounterState());
-    });
-
-    test('increment', () {
-      counterVelo.increment();
-      expect(counterVelo.state.count, 1);
-    });
-  });
-}
-```
+5. **Testing** : You can use https://pub.dev/packages/velo_test to test your Velos
 
 ## 🆚 Comparison with flutter_bloc
 
@@ -361,17 +332,7 @@ void main() {
 | Performance | Excellent | Excellent |
 | Features | Essential | Complete |
 
-## 🔍 Code quality
-
-Velo maintains high code quality standards:
-
-- **100% Test Coverage**: All code paths are tested
-- **Static Analysis**: Passes all Flutter linter rules  
-- **CI/CD**: Automated testing on every commit
-- **Security Scanning**: Regular security vulnerability checks
-- **Documentation**: Comprehensive API documentation
-
-## Example Project
+## Example project
 
 Check out the [example](example/) directory for a complete Flutter application demonstrating how to use Velo in practice.
 
@@ -379,7 +340,7 @@ Check out the [example](example/) directory for a complete Flutter application d
 
 This is a multi-package workspace. To work with the packages:
 
-### Getting Started
+### Getting started
 
 1. Clone the repository:
    ```bash
@@ -398,7 +359,7 @@ This is a multi-package workspace. To work with the packages:
    cd ../velo_test && flutter pub get
    ```
 
-### Running Tests
+### Running tests
 
 Run tests for all packages:
 ```bash
@@ -409,7 +370,7 @@ cd packages/velo && flutter test
 cd packages/velo_test && flutter test
 ```
 
-### Building the Example
+### Building the example
 
 ```bash
 cd example
