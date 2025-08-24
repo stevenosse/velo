@@ -52,7 +52,7 @@ jobs:
         fail_ci_if_error: false
 
   publish-check:
-    name: Publish Check
+    name: Publish check
     runs-on: ubuntu-latest
     needs: test
     strategy:
