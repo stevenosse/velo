@@ -64,8 +64,9 @@ void main() {
       notifier.dispose();
     });
 
-    testWidgets('should handle notifier change in didUpdateWidget',
-        (tester) async {
+    testWidgets('should handle notifier change in didUpdateWidget', (
+      tester,
+    ) async {
       final notifier1 = CounterNotifier();
       final notifier2 = CounterNotifier()
         ..increment()
@@ -75,15 +76,15 @@ void main() {
       CounterState? lastListenerState;
 
       Widget buildWithNotifier(CounterNotifier notifier) => createTestWidget(
-            counterNotifier: notifier,
-            child: VeloConsumer<CounterNotifier, CounterState>(
-              listener: (context, state) {
-                listenerCallCount++;
-                lastListenerState = state;
-              },
-              builder: (context, state) => Text('Count: ${state.count}'),
-            ),
-          );
+        counterNotifier: notifier,
+        child: VeloConsumer<CounterNotifier, CounterState>(
+          listener: (context, state) {
+            listenerCallCount++;
+            lastListenerState = state;
+          },
+          builder: (context, state) => Text('Count: ${state.count}'),
+        ),
+      );
 
       await tester.pumpWidget(buildWithNotifier(notifier1));
       expect(find.text('Count: 0'), findsOneWidget);

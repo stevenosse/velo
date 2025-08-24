@@ -1,38 +1,111 @@
-# Velo 🚴‍♂️
+# Velo Workspace
 
-[![pub package](https://img.shields.io/pub/v/velo.svg)](https://pub.dev/packages/velo)
-[![pub points](https://img.shields.io/pub/points/velo)](https://pub.dev/packages/velo/score)
-[![likes](https://img.shields.io/pub/likes/velo)](https://pub.dev/packages/velo/score)
+A comprehensive state management solution for Flutter applications, consisting of multiple packages for different use cases.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![style: flutter_lints](https://img.shields.io/badge/style-flutter_lints-40c4ff.svg)](https://pub.dev/packages/flutter_lints)
+## Packages
 
-A simple and efficient state management solution for Flutter, inspired by `flutter_bloc` but keeping only the essentials.
+This workspace contains the following packages:
 
-Velo takes the `Cubit` concept from `flutter_bloc` and builds upon Flutter's native `ValueNotifier` with `Equatable` support for efficient state comparisons.
+### 📦 [velo](packages/velo/)
 
-## 🌟 Features
+A lightweight, type-safe state management solution for Flutter applications built on top of ValueNotifier and Provider.
 
-- **Simple** : Built on Flutter's native `ValueNotifier`
-- **Efficient** : Integrates with `Equatable` to avoid unnecessary rebuilds  
-- **Lightweight** : Only essential components, no superfluous complexity
-- **Compatible** : Works perfectly with the `Provider` package
-- **Complete** : Includes builder, consumer, and listener widgets
+**Features:**
+- 🚀 **Lightweight**: Minimal overhead with maximum performance
+- 🔒 **Type-safe**: Full type safety with generic support
+- 🎯 **Simple API**: Easy to learn and use
+- 🔄 **Reactive**: Automatic UI updates when state changes
+- 🧪 **Testable**: Built with testing in mind
+- 📦 **Minimal dependencies**: Only depends on Flutter SDK and essential packages
+- 🎨 **Flutter-first**: Designed specifically for Flutter applications
 
-## 🚀 Installation
+### 🧪 [velo_test](packages/velo_test/)
 
-Add `velo` to your `pubspec.yaml`:
+Testing utilities and helpers for the Velo state management package.
+
+**Features:**
+- 🎯 **Mock Velo classes**: Easy mocking for unit tests
+- 📊 **State verification**: Verify state emissions and changes
+- 🔍 **Widget testing**: Specialized helpers for widget tests
+- ⏱️ **Async testing**: Support for testing async state changes
+- 📈 **Test coverage**: Comprehensive testing utilities
+
+## Quick start
+
+For detailed usage instructions and examples, please refer to the individual package documentation:
+
+- **[Velo package documentation](packages/velo/README.md)** - Core state management functionality
+- **[Velo test package documentation](packages/velo_test/README.md)** - Testing utilities and helpers
+
+### Basic example
+
+Here's a simple counter example using Velo:
+
+```dart
+// 1. Define your state
+class CounterState extends Equatable {
+  const CounterState({this.count = 0});
+  final int count;
+  
+  CounterState copyWith({int? count}) {
+    return CounterState(count: count ?? this.count);
+  }
+  
+  @override
+  List<Object> get props => [count];
+}
+
+// 2. Create your Velo class
+class CounterVelo extends Velo<CounterState> {
+  CounterVelo() : super(const CounterState());
+  
+  void increment() => emit(state.copyWith(count: state.count + 1));
+  void decrement() => emit(state.copyWith(count: state.count - 1));
+}
+
+// 3. Use in your UI
+class CounterPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Provider(
+      create: (_) => CounterVelo(),
+      child: Scaffold(
+        body: Center(
+          child: VeloBuilder<CounterVelo, CounterState>(
+            builder: (context, state) => Text('${state.count}'),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.read<CounterVelo>().increment(),
+          child: Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Installation
+
+Add the packages you need to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
   velo: ^1.0.0
-  provider: ^6.1.5
-  equatable: ^2.0.7
+  
+dev_dependencies:
+  velo_test: ^1.0.0
+```
+
+Then run:
+
+```bash
+flutter pub get
 ```
 
 ## 📚 Usage
 
-### 1. Define a State
+### 1. Define a state
 
 Create your state class by extending `Equatable`:
 
@@ -95,9 +168,9 @@ class CounterVelo extends Velo<CounterState> {
 }
 ```
 
-### 3. Use with Widgets
+### 3. Use with widgets
 
-#### VeloBuilder - For UI Rebuilding
+#### VeloBuilder - For UI rebuilding
 
 ```dart
 import 'package:flutter/material.dart';
@@ -142,7 +215,7 @@ class CounterPage extends StatelessWidget {
 }
 ```
 
-#### VeloListener - For Side Effects
+#### VeloListener - For side effects
 
 ```dart
 VeloListener<CounterVelo, CounterState>(
@@ -161,7 +234,7 @@ VeloListener<CounterVelo, CounterState>(
 )
 ```
 
-#### VeloConsumer - Combined Builder + Listener
+#### VeloConsumer - Combined builder + listener
 
 ```dart
 VeloConsumer<CounterVelo, CounterState>(
@@ -182,14 +255,14 @@ VeloConsumer<CounterVelo, CounterState>(
 
 ## 🔧 API Reference
 
-### Velo&lt;S&gt;
+### Velo<S>
 
-Abstract main class that extends `ValueNotifier&lt;S&gt;`.
+Abstract main class that extends `ValueNotifier<S>`.
 
 #### Methods
 
 - `emit(S state)` : Emits a new state if different from the previous one
-- `emitAsync(Future&lt;S&gt; futureState)` : Emits a state from a Future
+- `emitAsync(Future<S> futureState)` : Emits a state from a Future
 - `S get state` : Gets the current state
 
 ### Widgets
@@ -247,36 +320,7 @@ MultiVeloListener(
 2. **Equatable** : Implement `Equatable` to avoid unnecessary rebuilds  
 3. **Dispose** : Don't forget to dispose your Velos with Provider
 4. **Separation** : One Velo per business domain
-5. **Testing** : Test your Velos as simple Dart classes
-
-## 🧪 Testing
-
-```dart
-import 'package:flutter_test/flutter_test.dart';
-
-void main() {
-  group('CounterVelo', () {
-    late CounterVelo counterVelo;
-
-    setUp(() {
-      counterVelo = CounterVelo();
-    });
-
-    tearDown(() {
-      counterVelo.dispose();
-    });
-
-    test('initial state', () {
-      expect(counterVelo.state, const CounterState());
-    });
-
-    test('increment', () {
-      counterVelo.increment();
-      expect(counterVelo.state.count, 1);
-    });
-  });
-}
-```
+5. **Testing** : You can use https://pub.dev/packages/velo_test to test your Velos
 
 ## 🆚 Comparison with flutter_bloc
 
@@ -288,15 +332,51 @@ void main() {
 | Performance | Excellent | Excellent |
 | Features | Essential | Complete |
 
-## 🔍 Code quality
+## Example project
 
-Velo maintains high code quality standards:
+Check out the [example](example/) directory for a complete Flutter application demonstrating how to use Velo in practice.
 
-- **100% Test Coverage**: All code paths are tested
-- **Static Analysis**: Passes all Flutter linter rules  
-- **CI/CD**: Automated testing on every commit
-- **Security Scanning**: Regular security vulnerability checks
-- **Documentation**: Comprehensive API documentation
+## Development
+
+This is a multi-package workspace. To work with the packages:
+
+### Getting started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/velo.git
+   cd velo
+   ```
+
+2. Get workspace dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+3. Get dependencies for individual packages:
+   ```bash
+   cd packages/velo && flutter pub get
+   cd ../velo_test && flutter pub get
+   ```
+
+### Running tests
+
+Run tests for all packages:
+```bash
+# Test velo package
+cd packages/velo && flutter test
+
+# Test velo_test package
+cd packages/velo_test && flutter test
+```
+
+### Building the example
+
+```bash
+cd example
+flutter pub get
+flutter run
+```
 
 ## 🤝 Contributing
 

@@ -151,10 +151,10 @@ packages:
     dependency: "direct main"
     description:
       name: provider
-      sha256: "4abbd070a04e9ddc287673bf5a030c7ca8b685ff70218720abab8b092f53dd84"
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.5"
+    version: "6.1.5+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -219,10 +219,10 @@ packages:
   velo:
     dependency: "direct main"
     description:
-      path: ".."
+      path: "../packages/velo"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   vm_service:
     dependency: transitive
     description:
@@ -232,5 +232,5 @@ packages:
     source: hosted
     version: "15.0.0"
 sdks:
-  dart: ">=3.8.0 <4.0.0"
+  dart: ">=3.8.1 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"

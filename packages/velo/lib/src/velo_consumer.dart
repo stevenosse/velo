@@ -62,7 +62,8 @@ class _VeloConsumerState<N extends Velo<T>, T>
     } catch (error) {
       // Handle case where notifier is not found in widget tree
       debugPrint(
-          'VeloConsumer: Failed to find notifier of type $N in widget tree');
+        'VeloConsumer: Failed to find notifier of type $N in widget tree',
+      );
       rethrow;
     }
   }
@@ -89,7 +90,8 @@ class _VeloConsumerState<N extends Velo<T>, T>
             widget.listener!.call(context, notifier.state);
           } on Exception catch (error) {
             debugPrint(
-                'VeloConsumer: Error in listener callback during update: $error');
+              'VeloConsumer: Error in listener callback during update: $error',
+            );
           }
         }
       }
@@ -111,10 +113,10 @@ class _VeloConsumerState<N extends Velo<T>, T>
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<T>(
-        valueListenable: notifier,
-        builder: (context, state, _) {
-          _callListenerIfNeeded(state);
-          return widget.builder(context, state);
-        },
-      );
+    valueListenable: notifier,
+    builder: (context, state, _) {
+      _callListenerIfNeeded(state);
+      return widget.builder(context, state);
+    },
+  );
 }

@@ -1,20 +1,23 @@
-name: velo_workspace
-description: A multi-package workspace for Velo state management solution and testing utilities.
-version: 1.0.0
+name: velo
+description: A simple and efficient state management solution for Flutter, inspired by flutter_bloc but keeping only the essentials.
+version: 1.1.0
 homepage: https://github.com/stevenosse/velo
 repository: https://github.com/stevenosse/velo
 issue_tracker: https://github.com/stevenosse/velo/issues
 documentation: https://github.com/stevenosse/velo#readme
-publish_to: 'none' # This is a workspace, not a publishable package
+resolution: workspace
 
 environment:
-  sdk: "^3.8.1"
+  sdk: '^3.8.1'
   flutter: ">=3.0.0"
 
-# Workspace configuration
-workspace:
-  - packages/velo
-  - packages/velo_test
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
 
 funding:
   - https://github.com/sponsors/stevenosse
@@ -22,8 +25,15 @@ funding:
 topics:
   - state-management
   - flutter
-  - testing
-  - workspace
+  - cubit
+  - valuenotifier
+  - equatable
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.5+1
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
