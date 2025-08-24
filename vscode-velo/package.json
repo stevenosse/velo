@@ -1,6 +1,6 @@
 {
   "name": "velo-vscode",
-  "displayName": "Velo",
+  "displayName": "Velo State Management",
   "description": "VSCode extension for Velo state management - code generation, snippets, and productivity tools",
   "version": "0.1.0",
   "publisher": "stevenosse",
@@ -44,6 +44,11 @@
         "command": "velo.newTest",
         "title": "New Test",
         "category": "Velo"
+      },
+      {
+        "command": "velo.debugCodeActions",
+        "title": "Debug code actions",
+        "category": "Velo"
       }
     ],
     "menus": {
@@ -84,6 +89,10 @@
         },
         {
           "command": "velo.newTest",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "velo.debugCodeActions",
           "when": "editorLangId == dart"
         }
       ]
@@ -131,7 +140,7 @@
     "url": "https://github.com/stevenosse/velo/issues"
   },
   "license": "MIT",
-  "icon": "assets/icon.png",
+  "icon": "assets/velo.png",
   "galleryBanner": {
     "color": "#673AB7",
     "theme": "dark"

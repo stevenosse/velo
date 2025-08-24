@@ -10,7 +10,7 @@ export class TemplateGenerator {
    */
   generateVeloClass(className: string): string {
     const stateName = className.replace('Velo', 'State');
-    
+
     return `import 'package:equatable/equatable.dart';
 import 'package:velo/velo.dart';
 
@@ -19,12 +19,6 @@ import 'package:velo/velo.dart';
 
 class ${className} extends Velo<${stateName}> {
   ${className}() : super(const ${stateName}());
-
-  // TODO: Add your methods here
-  // Example:
-  // void increment() {
-  //   emit(state.copyWith(count: state.count + 1));
-  // }
 }
 `;
   }
@@ -34,27 +28,27 @@ class ${className} extends Velo<${stateName}> {
    */
   generateStateClass(className: string, properties: StateProperty[]): string {
     const hasProperties = properties.length > 0;
-    
+
     // Constructor parameters
     const constructorParams = hasProperties
       ? properties.map(p => `${p.defaultValue ? `this.${p.name} = ${p.defaultValue}` : `required this.${p.name}`}`).join(',\n    ')
       : '';
-    
+
     // Properties declaration
     const propertiesDecl = hasProperties
       ? properties.map(p => `  final ${p.type} ${p.name};`).join('\n')
       : '  // TODO: Add your properties here';
-    
+
     // Props list
     const propsList = hasProperties
       ? properties.map(p => p.name).join(', ')
       : '// TODO: Add your properties here';
-    
+
     // copyWith parameters
     const copyWithParams = hasProperties
       ? properties.map(p => `${p.type}? ${p.name}`).join(',\n    ')
       : '// TODO: Add your copyWith parameters here';
-    
+
     // copyWith body
     const copyWithBody = hasProperties
       ? properties.map(p => `      ${p.name}: ${p.name} ?? this.${p.name}`).join(',\n')
@@ -90,24 +84,6 @@ import '${stateImport}';
 
 class ${veloName} extends Velo<${stateName}> {
   ${veloName}() : super(const ${stateName}());
-
-  // TODO: Add your methods here
-  // Example:
-  // void increment() {
-  //   emit(state.copyWith(count: state.count + 1));
-  // }
-  
-  // Example async method:
-  // Future<void> loadData() async {
-  //   emit(state.copyWith(isLoading: true));
-  //   try {
-  //     // Your async logic here
-  //     final data = await fetchData();
-  //     emit(state.copyWith(data: data, isLoading: false));
-  //   } catch (error) {
-  //     emit(state.copyWith(error: error.toString(), isLoading: false));
-  //   }
-  // }
 }
 `;
   }
@@ -116,7 +92,7 @@ class ${veloName} extends Velo<${stateName}> {
    * Generates a test file template
    */
   generateTestFile(testName: string): string {
-    const className = testName.split('_').map(word => 
+    const className = testName.split('_').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('');
 

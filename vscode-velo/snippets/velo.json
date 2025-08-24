@@ -6,8 +6,8 @@
       "import 'package:velo/velo.dart';",
       "import '${1:state_file}.dart';",
       "",
-      "class ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Velo extends Velo<${3:${2/Velo/State/}}> {",
-      "  ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Velo() : super(const ${3:${2/Velo/State/}}());",
+      "class ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Notifier extends Velo<${3:${2/Notifier/State/}}> {",
+      "  ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Notifier() : super(const ${3:${2/Notifier/State/}}());",
       "",
       "  ${4:// Add your methods here}",
       "  ${5:void ${6:methodName}() {",
@@ -16,7 +16,6 @@
       "}"
     ]
   },
-
   "Velo State": {
     "prefix": "velo-state",
     "description": "Create a new Velo state class with Equatable",
@@ -43,7 +42,6 @@
       "}"
     ]
   },
-
   "VeloBuilder": {
     "prefix": "velo-builder",
     "description": "Create a VeloBuilder widget",
@@ -55,7 +53,6 @@
       ")"
     ]
   },
-
   "VeloListener": {
     "prefix": "velo-listener",
     "description": "Create a VeloListener widget",
@@ -68,12 +65,11 @@
       ")"
     ]
   },
-
   "VeloConsumer": {
     "prefix": "velo-consumer",
     "description": "Create a VeloConsumer widget",
     "body": [
-      "VeloConsumer<${1:MyVelo}, ${2:MyState}>(",
+      "VeloConsumer<${1:MyNotifier}, ${2:MyState}>(",
       "  listener: (context, state) {",
       "    ${3:// Add your listener logic here}",
       "  },",
@@ -83,31 +79,29 @@
       ")"
     ]
   },
-
   "Provider with Velo": {
     "prefix": "velo-provider",
     "description": "Create a Provider with Velo disposal",
     "body": [
-      "Provider<${1:MyVelo}>(",
-      "  create: (_) => ${1:MyVelo}(),",
+      "Provider<${1:MyNotifier}>(",
+      "  create: (_) => ${1:MyNotifier}(),",
       "  dispose: (_, velo) => velo.dispose(),",
       "  child: ${2:MyWidget()},",
       ")"
     ]
   },
-
   "MultiProvider with Velo": {
     "prefix": "velo-multi-provider",
     "description": "Create a MultiProvider with multiple Velos",
     "body": [
       "MultiProvider(",
       "  providers: [",
-      "    Provider<${1:FirstVelo}>(", 
-      "      create: (_) => ${1:FirstVelo}(),",
+      "    Provider<${1:FirstNotifier}>(",
+      "      create: (_) => ${1:FirstNotifier}(),",
       "      dispose: (_, velo) => velo.dispose(),",
       "    ),",
-      "    Provider<${2:SecondVelo}>(",
-      "      create: (_) => ${2:SecondVelo}(),", 
+      "    Provider<${2:SecondNotifier}>(",
+      "      create: (_) => ${2:SecondNotifier}(),",
       "      dispose: (_, velo) => velo.dispose(),",
       "    ),",
       "  ],",
@@ -115,7 +109,6 @@
       ")"
     ]
   },
-
   "Emit State": {
     "prefix": "velo-emit",
     "description": "Emit a new state",
@@ -123,7 +116,6 @@
       "emit(state.copyWith(${1:property}: ${2:value}));"
     ]
   },
-
   "Async Velo Method": {
     "prefix": "velo-async",
     "description": "Create an async method in Velo class",
@@ -148,23 +140,20 @@
       "}"
     ]
   },
-
   "Context Read": {
     "prefix": "context-read",
     "description": "context.read<T>()",
     "body": [
-      "context.read<${1:MyVelo}>()"
+      "context.read<${1:MyNotifier}>()"
     ]
   },
-
   "Context Watch": {
-    "prefix": "context-watch", 
+    "prefix": "context-watch",
     "description": "context.watch<T>()",
     "body": [
-      "context.watch<${1:MyVelo}>()"
+      "context.watch<${1:MyNotifier}>()"
     ]
   },
-
   "CopyWith Method": {
     "prefix": "velo-copywith",
     "description": "Generate copyWith method for state",
@@ -178,7 +167,6 @@
       "}"
     ]
   },
-
   "Props Override": {
     "prefix": "velo-props",
     "description": "Generate props list for Equatable",
@@ -187,7 +175,6 @@
       "List<Object?> get props => [${1:property}];"
     ]
   },
-
   "Velo Test": {
     "prefix": "velo-test",
     "description": "Create a Velo test structure",
@@ -197,14 +184,14 @@
       "",
       "void main() {",
       "  group('${1:TestGroup}', () {",
-      "    late ${2:MyVelo} velo;",
+      "    late ${2:MyNotifier} notifier;",
       "",
       "    setUp(() {",
-      "      velo = ${2:MyVelo}();",
+      "      notifier = ${2:MyNotifier}();",
       "    });",
       "",
       "    tearDown(() {",
-      "      velo.dispose();",
+      "      notifier.dispose();",
       "    });",
       "",
       "    test('${3:test description}', () {",
@@ -214,17 +201,15 @@
       "}"
     ]
   },
-
   "Mock Velo": {
     "prefix": "velo-mock",
     "description": "Create a mock Velo for testing",
     "body": [
       "import 'package:velo_test/velo_test.dart';",
       "",
-      "class Mock${1:MyVelo} extends MockVelo<${2:MyState}> implements ${1:MyVelo} {}"
+      "class Mock${1:MyNotifier} extends MockVelo<${2:MyState}> implements ${1:MyNotifier} {}"
     ]
   },
-
   "State Matcher": {
     "prefix": "velo-matcher",
     "description": "Create a custom state matcher",
@@ -237,7 +222,6 @@
       "}"
     ]
   },
-
   "Velo Import": {
     "prefix": "import-velo",
     "description": "Import Velo package",
@@ -245,7 +229,6 @@
       "import 'package:velo/velo.dart';"
     ]
   },
-
   "Velo Test Import": {
     "prefix": "import-velo-test",
     "description": "Import Velo test package",
@@ -253,7 +236,6 @@
       "import 'package:velo_test/velo_test.dart';"
     ]
   },
-
   "Provider Import": {
     "prefix": "import-provider",
     "description": "Import Provider package",
@@ -261,7 +243,6 @@
       "import 'package:provider/provider.dart';"
     ]
   },
-
   "Loading State Pattern": {
     "prefix": "velo-loading",
     "description": "Create loading state pattern",
@@ -273,10 +254,9 @@
       "${2:// Normal UI}"
     ]
   },
-
   "Error State Pattern": {
     "prefix": "velo-error",
-    "description": "Create error state pattern", 
+    "description": "Create error state pattern",
     "body": [
       "if (state.error != null) {",
       "  return ${1:Text('Error: \\${state.error}')};",

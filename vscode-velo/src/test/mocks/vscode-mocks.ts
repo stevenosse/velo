@@ -13,14 +13,14 @@ export class MockTextDocument {
 
   private _text: string;
 
-  constructor(content: string, uri?: vscode.Uri) {
+  constructor(content: string, uri?: any) {
     this._text = content;
     this.lineCount = content.split('\n').length;
-    this.uri = uri || vscode.Uri.file('/test.dart');
+    this.uri = uri || { fsPath: '/test.dart' };
     this.fileName = this.uri.fsPath;
   }
 
-  getText(range?: vscode.Range): string {
+  getText(range?: any): string {
     if (!range) {
       return this._text;
     }
@@ -41,24 +41,24 @@ export class MockTextDocument {
     return result.join('\n');
   }
 
-  getWordRangeAtPosition(): vscode.Range | undefined {
+  getWordRangeAtPosition(): any {
     return undefined;
   }
 
-  validateRange(range: vscode.Range): vscode.Range {
+  validateRange(range: any): any {
     return range;
   }
 
-  validatePosition(position: vscode.Position): vscode.Position {
+  validatePosition(position: any): any {
     return position;
   }
 
-  positionAt(offset: number): vscode.Position {
+  positionAt(offset: number): any {
     const lines = this._text.substring(0, offset).split('\n');
-    return new vscode.Position(lines.length - 1, lines[lines.length - 1].length);
+    return { line: lines.length - 1, character: lines[lines.length - 1].length };
   }
 
-  offsetAt(position: vscode.Position): number {
+  offsetAt(position: any): number {
     const lines = this._text.split('\n');
     let offset = 0;
     for (let i = 0; i < position.line; i++) {
@@ -67,7 +67,7 @@ export class MockTextDocument {
     return offset + position.character;
   }
 
-  lineAt(position: vscode.Position | number): vscode.TextLine {
+  lineAt(position: any): any {
     const lineNumber = typeof position === 'number' ? position : position.line;
     const lines = this._text.split('\n');
     const text = lines[lineNumber] || '';
@@ -75,8 +75,8 @@ export class MockTextDocument {
     return {
       lineNumber,
       text,
-      range: new vscode.Range(lineNumber, 0, lineNumber, text.length),
-      rangeIncludingLineBreak: new vscode.Range(lineNumber, 0, lineNumber + 1, 0),
+      range: { start: { line: lineNumber, character: 0 }, end: { line: lineNumber, character: text.length } },
+      rangeIncludingLineBreak: { start: { line: lineNumber, character: 0 }, end: { line: lineNumber + 1, character: 0 } },
       firstNonWhitespaceCharacterIndex: text.search(/\S|$/),
       isEmptyOrWhitespace: text.trim().length === 0,
     };
@@ -86,43 +86,43 @@ export class MockTextDocument {
 export class MockWorkspaceEdit {
   size = 0;
   
-  replace(_uri: vscode.Uri, _range: vscode.Range, _newText: string): void {
+  replace(_uri: any, _range: any, _newText: string): void {
     this.size++;
   }
 
-  insert(_uri: vscode.Uri, _position: vscode.Position, _newText: string): void {
+  insert(_uri: any, _position: any, _newText: string): void {
     this.size++;
   }
 
-  delete(_uri: vscode.Uri, _range: vscode.Range): void {
+  delete(_uri: any, _range: any): void {
     this.size++;
   }
 
-  has(_uri: vscode.Uri): boolean {
+  has(_uri: any): boolean {
     return this.size > 0;
   }
 
-  set(_uri: vscode.Uri, edits: any): void {
+  set(_uri: any, edits: any): void {
     this.size = Array.isArray(edits) ? edits.length : 1;
   }
 
-  get(_uri: vscode.Uri): any[] {
+  get(_uri: any): any[] {
     return [];
   }
 
-  createFile(_uri: vscode.Uri, _options?: any): void {
+  createFile(_uri: any, _options?: any): void {
     this.size++;
   }
 
-  deleteFile(_uri: vscode.Uri, _options?: any): void {
+  deleteFile(_uri: any, _options?: any): void {
     this.size++;
   }
 
-  renameFile(_oldUri: vscode.Uri, _newUri: vscode.Uri, _options?: any): void {
+  renameFile(_oldUri: any, _newUri: any, _options?: any): void {
     this.size++;
   }
 
-  entries(): [vscode.Uri, any[]][] {
+  entries(): [any, any[]][] {
     return [];
   }
 }

@@ -1,13 +1,12 @@
 import { VeloCodeActionProvider } from '../../providers/code-action-provider';
 import { MockTextDocument } from '../mocks/vscode-mocks';
-import * as vscode from 'vscode';
 
 // Mock vscode
 jest.mock('vscode', () => ({
   CodeActionKind: {
     Refactor: { value: 'refactor' }
   },
-  CodeAction: jest.fn().mockImplementation((title, kind) => ({
+  CodeAction: jest.fn().mockImplementation((title: string, kind: any) => ({
     title,
     kind,
     edit: undefined,
@@ -15,20 +14,25 @@ jest.mock('vscode', () => ({
   WorkspaceEdit: jest.fn().mockImplementation(() => ({
     replace: jest.fn(),
   })),
-  Range: jest.fn().mockImplementation((start, end) => ({ start, end })),
-  Position: jest.fn().mockImplementation((line, character) => ({ line, character })),
+  Range: jest.fn().mockImplementation((startLine: number, startChar: number, endLine: number, endChar: number) => ({
+    start: { line: startLine, character: startChar },
+    end: { line: endLine, character: endChar }
+  })),
+  Position: jest.fn().mockImplementation((line: number, character: number) => ({ line, character })),
   Uri: {
-    file: jest.fn().mockImplementation((path) => ({ fsPath: path })),
+    file: jest.fn().mockImplementation((path: string) => ({ fsPath: path })),
   },
 }), { virtual: true });
 
+import * as vscode from 'vscode';
+
 describe('VeloCodeActionProvider', () => {
   let provider: VeloCodeActionProvider;
-  let mockContext: vscode.CodeActionContext;
+  let mockContext: any;
 
   beforeEach(() => {
     provider = new VeloCodeActionProvider();
-    mockContext = {} as vscode.CodeActionContext;
+    mockContext = {};
   });
 
   describe('provideCodeActions', () => {
@@ -36,7 +40,7 @@ describe('VeloCodeActionProvider', () => {
       const document = new MockTextDocument('');
       const range = new vscode.Range(0, 0, 0, 0);
       
-      const actions = provider.provideCodeActions(document as any, range, mockContext, {} as any);
+      const actions = provider.provideCodeActions(document as any, range as any, mockContext, {} as any);
       
       expect(actions).toEqual([]);
     });
@@ -49,7 +53,7 @@ Container()
       const document = new MockTextDocument(content);
       const range = new vscode.Range(2, 0, 2, 11); // Select "Container()"
       
-      const actions = provider.provideCodeActions(document as any, range, mockContext, {} as any);
+      const actions = provider.provideCodeActions(document as any, range as any, mockContext, {} as any);
       
       expect(actions).toBeDefined();
       if (actions) {
@@ -71,7 +75,7 @@ VeloBuilder<CounterVelo, CounterState>(
       const document = new MockTextDocument(content);
       const range = new vscode.Range(1, 0, 3, 1);
       
-      const actions = provider.provideCodeActions(document as any, range, mockContext, {} as any);
+      const actions = provider.provideCodeActions(document as any, range as any, mockContext, {} as any);
       
       expect(actions).toBeDefined();
       if (actions) {
@@ -90,7 +94,7 @@ VeloConsumer<CounterVelo, CounterState>(
       const document = new MockTextDocument(content);
       const range = new vscode.Range(1, 0, 4, 1);
       
-      const actions = provider.provideCodeActions(document as any, range, mockContext, {} as any);
+      const actions = provider.provideCodeActions(document as any, range as any, mockContext, {} as any);
       
       expect(actions).toBeDefined();
       if (actions) {
@@ -109,7 +113,7 @@ Provider<CounterVelo>(
       const document = new MockTextDocument(content);
       const range = new vscode.Range(1, 0, 4, 1);
       
-      const actions = provider.provideCodeActions(document as any, range, mockContext, {} as any);
+      const actions = provider.provideCodeActions(document as any, range as any, mockContext, {} as any);
       
       expect(actions).toBeDefined();
       if (actions) {

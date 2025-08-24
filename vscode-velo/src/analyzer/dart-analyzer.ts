@@ -73,22 +73,33 @@ export class DartAnalyzer {
     const text = document.getText();
     const properties: Array<{name: string; type: string}> = [];
     
-    // Find the state class
-    const stateClassRegex = new RegExp(`class\\s+${stateName}\\s+extends\\s+Equatable\\s*\\{([^}]+)\\}`, 's');
-    const stateClassMatch = text.match(stateClassRegex);
+    // Look for final properties in the entire document
+    // This is simpler and more reliable than trying to parse class boundaries
+    const lines = text.split('\n');
+    let inStateClass = false;
     
-    if (stateClassMatch) {
-      const classBody = stateClassMatch[1];
+    for (const line of lines) {
+      // Check if we're entering the state class
+      if (line.includes(`class ${stateName} extends Equatable`)) {
+        inStateClass = true;
+        continue;
+      }
       
-      // Find final properties
-      const propertyRegex = /final\s+(\w+(?:\?|<[^>]+>)?)\s+(\w+);/g;
-      let propertyMatch;
+      // Check if we're leaving the class (simple heuristic)
+      if (inStateClass && line.match(/^class\s+\w+/) && !line.includes(stateName)) {
+        inStateClass = false;
+        continue;
+      }
       
-      while ((propertyMatch = propertyRegex.exec(classBody)) !== null) {
-        properties.push({
-          type: propertyMatch[1],
-          name: propertyMatch[2],
-        });
+      // Look for final properties
+      if (inStateClass) {
+        const propertyMatch = line.match(/final\s+(\w+(?:\?|<[^>]*>)*)\s+(\w+);/);
+        if (propertyMatch) {
+          properties.push({
+            type: propertyMatch[1],
+            name: propertyMatch[2],
+          });
+        }
       }
     }
     

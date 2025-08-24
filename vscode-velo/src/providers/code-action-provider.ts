@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { TemplateGenerator } from '../templates/template-generator';
 import { DartAnalyzer } from '../analyzer/dart-analyzer';
+import { TemplateGenerator } from '../templates/template-generator';
 
 export class VeloCodeActionProvider implements vscode.CodeActionProvider {
   private templateGenerator = new TemplateGenerator();
@@ -14,16 +14,18 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
   ): vscode.CodeAction[] | undefined {
     const actions: vscode.CodeAction[] = [];
     const selectedText = document.getText(range).trim();
-    
+
     if (!selectedText) {
       return actions;
     }
 
     // Add wrapping actions
-    actions.push(...this.createWrappingActions(document, range, selectedText));
-    
+    const wrappingActions = this.createWrappingActions(document, range, selectedText);
+    actions.push(...wrappingActions);
+
     // Add conversion actions if applicable
-    actions.push(...this.createConversionActions(document, range, selectedText));
+    const conversionActions = this.createConversionActions(document, range, selectedText);
+    actions.push(...conversionActions);
 
     return actions;
   }
@@ -34,16 +36,17 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     selectedText: string
   ): vscode.CodeAction[] {
     const actions: vscode.CodeAction[] = [];
-    
+
     // Try to detect Velo and State types from context
     const veloTypes = this.dartAnalyzer.findVeloTypesInDocument(document);
-    const defaultVeloType = veloTypes.length > 0 ? veloTypes[0].veloType : 'MyVelo';
+
+    const defaultVeloType = veloTypes.length > 0 ? veloTypes[0].veloType : 'MyNotifier';
     const defaultStateType = veloTypes.length > 0 ? veloTypes[0].stateType : 'MyState';
 
     // Wrap with VeloBuilder
     const wrapWithBuilderAction = new vscode.CodeAction(
       'Wrap with VeloBuilder',
-      vscode.CodeActionKind.Refactor
+      vscode.CodeActionKind.QuickFix
     );
     wrapWithBuilderAction.edit = new vscode.WorkspaceEdit();
     wrapWithBuilderAction.edit.replace(
@@ -56,7 +59,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     // Wrap with VeloListener
     const wrapWithListenerAction = new vscode.CodeAction(
       'Wrap with VeloListener',
-      vscode.CodeActionKind.Refactor
+      vscode.CodeActionKind.QuickFix
     );
     wrapWithListenerAction.edit = new vscode.WorkspaceEdit();
     wrapWithListenerAction.edit.replace(
@@ -69,7 +72,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     // Wrap with VeloConsumer
     const wrapWithConsumerAction = new vscode.CodeAction(
       'Wrap with VeloConsumer',
-      vscode.CodeActionKind.Refactor
+      vscode.CodeActionKind.QuickFix
     );
     wrapWithConsumerAction.edit = new vscode.WorkspaceEdit();
     wrapWithConsumerAction.edit.replace(
@@ -82,7 +85,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     // Wrap with Provider
     const wrapWithProviderAction = new vscode.CodeAction(
       'Wrap with Provider',
-      vscode.CodeActionKind.Refactor
+      vscode.CodeActionKind.QuickFix
     );
     wrapWithProviderAction.edit = new vscode.WorkspaceEdit();
     wrapWithProviderAction.edit.replace(
@@ -106,7 +109,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     if (selectedText.includes('VeloBuilder')) {
       const convertToConsumerAction = new vscode.CodeAction(
         'Convert to VeloConsumer',
-        vscode.CodeActionKind.Refactor
+        vscode.CodeActionKind.QuickFix
       );
       convertToConsumerAction.edit = new vscode.WorkspaceEdit();
       convertToConsumerAction.edit.replace(
@@ -121,7 +124,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     if (selectedText.includes('VeloConsumer')) {
       const convertToBuilderAction = new vscode.CodeAction(
         'Convert to VeloBuilder',
-        vscode.CodeActionKind.Refactor
+        vscode.CodeActionKind.QuickFix
       );
       convertToBuilderAction.edit = new vscode.WorkspaceEdit();
       convertToBuilderAction.edit.replace(
@@ -136,7 +139,7 @@ export class VeloCodeActionProvider implements vscode.CodeActionProvider {
     if (selectedText.includes('Provider<') && !selectedText.includes('MultiProvider')) {
       const convertToMultiProviderAction = new vscode.CodeAction(
         'Convert to MultiProvider',
-        vscode.CodeActionKind.Refactor
+        vscode.CodeActionKind.QuickFix
       );
       convertToMultiProviderAction.edit = new vscode.WorkspaceEdit();
       convertToMultiProviderAction.edit.replace(

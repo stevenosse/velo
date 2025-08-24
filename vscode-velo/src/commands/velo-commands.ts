@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
-import { PathUtils } from '../utils/path-utils';
+import * as vscode from 'vscode';
 import { TemplateGenerator } from '../templates/template-generator';
+import { PathUtils } from '../utils/path-utils';
 
 export class VeloCommands {
   private templateGenerator = new TemplateGenerator();
@@ -18,11 +18,11 @@ export class VeloCommands {
 
     const fileName = await vscode.window.showInputBox({
       prompt: 'Enter Velo class name',
-      placeHolder: 'CounterVelo',
+      placeHolder: 'CounterNotifier',
       validateInput: (value) => {
         if (!value) return 'Name is required';
-        if (!/^[A-Z][a-zA-Z0-9]*$/.test(value)) {
-          return 'Name must be PascalCase and start with uppercase letter';
+        if (!/^[A-Z][a-zA-Z0-9]*Notifier$/.test(value)) {
+          return 'Name must be PascalCase and end with "Notifier"';
         }
         return null;
       },
@@ -31,7 +31,7 @@ export class VeloCommands {
     if (!fileName) return;
 
     const filePath = PathUtils.createFilePath(targetDir, fileName);
-    
+
     if (await PathUtils.fileExists(filePath)) {
       const overwrite = await vscode.window.showWarningMessage(
         `File ${path.basename(filePath)} already exists. Overwrite?`,
@@ -72,7 +72,7 @@ export class VeloCommands {
 
     const properties = await this.getStateProperties();
     const filePath = PathUtils.createFilePath(targetDir, fileName);
-    
+
     if (await PathUtils.fileExists(filePath)) {
       const overwrite = await vscode.window.showWarningMessage(
         `File ${path.basename(filePath)} already exists. Overwrite?`,
@@ -98,7 +98,7 @@ export class VeloCommands {
     }
 
     const baseName = await vscode.window.showInputBox({
-      prompt: 'Enter base name (e.g., "Counter" will create CounterVelo and CounterState)',
+      prompt: 'Enter base name (e.g., "Counter" will create CounterNotifier and CounterState)',
       placeHolder: 'Counter',
       validateInput: (value) => {
         if (!value) return 'Name is required';
@@ -112,7 +112,7 @@ export class VeloCommands {
     if (!baseName) return;
 
     const properties = await this.getStateProperties();
-    const veloName = `${baseName}Velo`;
+    const veloName = `${baseName}Notifier`;
     const stateName = `${baseName}State`;
 
     // Create state file
@@ -141,7 +141,7 @@ export class VeloCommands {
 
     const testName = await vscode.window.showInputBox({
       prompt: 'Enter test name (without _test suffix)',
-      placeHolder: 'counter_velo',
+      placeHolder: 'counter_notifier',
       validateInput: (value) => {
         if (!value) return 'Name is required';
         if (!/^[a-z][a-z0-9_]*$/.test(value)) {
@@ -168,7 +168,7 @@ export class VeloCommands {
    */
   private async getStateProperties(): Promise<Array<{ name: string; type: string; defaultValue?: string }>> {
     const properties: Array<{ name: string; type: string; defaultValue?: string }> = [];
-    
+
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const propertyInput = await vscode.window.showInputBox({
