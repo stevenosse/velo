@@ -1,6 +1,6 @@
 name: velo
 description: A simple and efficient state management solution for Flutter, inspired by flutter_bloc but keeping only the essentials.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/stevenosse/velo
 repository: https://github.com/stevenosse/velo
 issue_tracker: https://github.com/stevenosse/velo/issues
