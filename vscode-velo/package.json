@@ -1,0 +1,139 @@
+{
+  "name": "velo-vscode",
+  "displayName": "Velo",
+  "description": "VSCode extension for Velo state management - code generation, snippets, and productivity tools",
+  "version": "0.1.0",
+  "publisher": "stevenosse",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "flutter",
+    "dart",
+    "state management",
+    "velo",
+    "provider",
+    "reactive"
+  ],
+  "activationEvents": [
+    "onLanguage:dart"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "velo.newVelo",
+        "title": "New Velo",
+        "category": "Velo"
+      },
+      {
+        "command": "velo.newState",
+        "title": "New State",
+        "category": "Velo"
+      },
+      {
+        "command": "velo.newVeloWithState",
+        "title": "New Velo + State",
+        "category": "Velo"
+      },
+      {
+        "command": "velo.newTest",
+        "title": "New Test",
+        "category": "Velo"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "velo.newVelo",
+          "group": "velo@1"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "velo.newState",
+          "group": "velo@2"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "velo.newVeloWithState",
+          "group": "velo@3"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "velo.newTest",
+          "group": "velo@4"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "velo.newVelo",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "velo.newState",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "velo.newVeloWithState",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "velo.newTest",
+          "when": "editorLangId == dart"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "dart",
+        "path": "./snippets/velo.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.0",
+    "typescript": "^4.9.4",
+    "jest": "^29.3.1",
+    "@types/jest": "^29.2.4",
+    "ts-jest": "^29.0.3",
+    "vsce": "^2.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevenosse/velo.git"
+  },
+  "homepage": "https://github.com/stevenosse/velo#readme",
+  "bugs": {
+    "url": "https://github.com/stevenosse/velo/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/icon.png",
+  "galleryBanner": {
+    "color": "#673AB7",
+    "theme": "dark"
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "Velo Class": {
+    "prefix": "velo-class",
+    "description": "Create a new Velo class",
+    "body": [
+      "import 'package:velo/velo.dart';",
+      "import '${1:state_file}.dart';",
+      "",
+      "class ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Velo extends Velo<${3:${2/Velo/State/}}> {",
+      "  ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Velo() : super(const ${3:${2/Velo/State/}}());",
+      "",
+      "  ${4:// Add your methods here}",
+      "  ${5:void ${6:methodName}() {",
+      "    emit(state.copyWith(${7:// parameters}));",
+      "  \\}}",
+      "}"
+    ]
+  },
+
+  "Velo State": {
+    "prefix": "velo-state",
+    "description": "Create a new Velo state class with Equatable",
+    "body": [
+      "import 'package:equatable/equatable.dart';",
+      "",
+      "class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} extends Equatable {",
+      "  const ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}({",
+      "    ${2:this.${3:property} = ${4:defaultValue},}",
+      "  });",
+      "",
+      "  ${5:final ${6:String} ${3:property};}",
+      "",
+      "  @override",
+      "  List<Object?> get props => [${7:${3:property}}];",
+      "",
+      "  ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} copyWith({",
+      "    ${8:${6:String}? ${3:property},}",
+      "  }) {",
+      "    return ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}(",
+      "      ${9:${3:property}: ${3:property} ?? this.${3:property},}",
+      "    );",
+      "  }",
+      "}"
+    ]
+  },
+
+  "VeloBuilder": {
+    "prefix": "velo-builder",
+    "description": "Create a VeloBuilder widget",
+    "body": [
+      "VeloBuilder<${1:MyVelo}, ${2:MyState}>(",
+      "  builder: (context, state) {",
+      "    return ${3:Container()};",
+      "  },",
+      ")"
+    ]
+  },
+
+  "VeloListener": {
+    "prefix": "velo-listener",
+    "description": "Create a VeloListener widget",
+    "body": [
+      "VeloListener<${1:MyVelo}, ${2:MyState}>(",
+      "  listener: (context, state) {",
+      "    ${3:// Add your listener logic here}",
+      "  },",
+      "  child: ${4:Container()},",
+      ")"
+    ]
+  },
+
+  "VeloConsumer": {
+    "prefix": "velo-consumer",
+    "description": "Create a VeloConsumer widget",
+    "body": [
+      "VeloConsumer<${1:MyVelo}, ${2:MyState}>(",
+      "  listener: (context, state) {",
+      "    ${3:// Add your listener logic here}",
+      "  },",
+      "  builder: (context, state) {",
+      "    return ${4:Container()};",
+      "  },",
+      ")"
+    ]
+  },
+
+  "Provider with Velo": {
+    "prefix": "velo-provider",
+    "description": "Create a Provider with Velo disposal",
+    "body": [
+      "Provider<${1:MyVelo}>(",
+      "  create: (_) => ${1:MyVelo}(),",
+      "  dispose: (_, velo) => velo.dispose(),",
+      "  child: ${2:MyWidget()},",
+      ")"
+    ]
+  },
+
+  "MultiProvider with Velo": {
+    "prefix": "velo-multi-provider",
+    "description": "Create a MultiProvider with multiple Velos",
+    "body": [
+      "MultiProvider(",
+      "  providers: [",
+      "    Provider<${1:FirstVelo}>(", 
+      "      create: (_) => ${1:FirstVelo}(),",
+      "      dispose: (_, velo) => velo.dispose(),",
+      "    ),",
+      "    Provider<${2:SecondVelo}>(",
+      "      create: (_) => ${2:SecondVelo}(),", 
+      "      dispose: (_, velo) => velo.dispose(),",
+      "    ),",
+      "  ],",
+      "  child: ${3:MyWidget()},",
+      ")"
+    ]
+  },
+
+  "Emit State": {
+    "prefix": "velo-emit",
+    "description": "Emit a new state",
+    "body": [
+      "emit(state.copyWith(${1:property}: ${2:value}));"
+    ]
+  },
+
+  "Async Velo Method": {
+    "prefix": "velo-async",
+    "description": "Create an async method in Velo class",
+    "body": [
+      "Future<void> ${1:methodName}() async {",
+      "  emit(state.copyWith(isLoading: true));",
+      "  ",
+      "  try {",
+      "    ${2:// Your async logic here}",
+      "    ${3:final result = await fetchData();}",
+      "    ",
+      "    emit(state.copyWith(",
+      "      ${4:data: result,}",
+      "      isLoading: false,",
+      "    ));",
+      "  } catch (error) {",
+      "    emit(state.copyWith(",
+      "      error: error.toString(),",
+      "      isLoading: false,",
+      "    ));",
+      "  }",
+      "}"
+    ]
+  },
+
+  "Context Read": {
+    "prefix": "context-read",
+    "description": "context.read<T>()",
+    "body": [
+      "context.read<${1:MyVelo}>()"
+    ]
+  },
+
+  "Context Watch": {
+    "prefix": "context-watch", 
+    "description": "context.watch<T>()",
+    "body": [
+      "context.watch<${1:MyVelo}>()"
+    ]
+  },
+
+  "CopyWith Method": {
+    "prefix": "velo-copywith",
+    "description": "Generate copyWith method for state",
+    "body": [
+      "${1:ClassName} copyWith({",
+      "  ${2:String? property,}",
+      "}) {",
+      "  return ${1:ClassName}(",
+      "    ${3:property: property ?? this.property,}",
+      "  );",
+      "}"
+    ]
+  },
+
+  "Props Override": {
+    "prefix": "velo-props",
+    "description": "Generate props list for Equatable",
+    "body": [
+      "@override",
+      "List<Object?> get props => [${1:property}];"
+    ]
+  },
+
+  "Velo Test": {
+    "prefix": "velo-test",
+    "description": "Create a Velo test structure",
+    "body": [
+      "import 'package:flutter_test/flutter_test.dart';",
+      "import 'package:velo_test/velo_test.dart';",
+      "",
+      "void main() {",
+      "  group('${1:TestGroup}', () {",
+      "    late ${2:MyVelo} velo;",
+      "",
+      "    setUp(() {",
+      "      velo = ${2:MyVelo}();",
+      "    });",
+      "",
+      "    tearDown(() {",
+      "      velo.dispose();",
+      "    });",
+      "",
+      "    test('${3:test description}', () {",
+      "      ${4:// Test implementation}",
+      "    });",
+      "  });",
+      "}"
+    ]
+  },
+
+  "Mock Velo": {
+    "prefix": "velo-mock",
+    "description": "Create a mock Velo for testing",
+    "body": [
+      "import 'package:velo_test/velo_test.dart';",
+      "",
+      "class Mock${1:MyVelo} extends MockVelo<${2:MyState}> implements ${1:MyVelo} {}"
+    ]
+  },
+
+  "State Matcher": {
+    "prefix": "velo-matcher",
+    "description": "Create a custom state matcher",
+    "body": [
+      "Matcher ${1:matcherName}(${2:dynamic expected}) {",
+      "  return predicate<${3:StateType}>(",
+      "    (state) => ${4:condition},",
+      "    '${5:description}',",
+      "  );",
+      "}"
+    ]
+  },
+
+  "Velo Import": {
+    "prefix": "import-velo",
+    "description": "Import Velo package",
+    "body": [
+      "import 'package:velo/velo.dart';"
+    ]
+  },
+
+  "Velo Test Import": {
+    "prefix": "import-velo-test",
+    "description": "Import Velo test package",
+    "body": [
+      "import 'package:velo_test/velo_test.dart';"
+    ]
+  },
+
+  "Provider Import": {
+    "prefix": "import-provider",
+    "description": "Import Provider package",
+    "body": [
+      "import 'package:provider/provider.dart';"
+    ]
+  },
+
+  "Loading State Pattern": {
+    "prefix": "velo-loading",
+    "description": "Create loading state pattern",
+    "body": [
+      "if (state.isLoading) {",
+      "  return const ${1:CircularProgressIndicator()};",
+      "}",
+      "",
+      "${2:// Normal UI}"
+    ]
+  },
+
+  "Error State Pattern": {
+    "prefix": "velo-error",
+    "description": "Create error state pattern", 
+    "body": [
+      "if (state.error != null) {",
+      "  return ${1:Text('Error: \\${state.error}')};",
+      "}",
+      "",
+      "${2:// Normal UI}"
+    ]
+  }
+}

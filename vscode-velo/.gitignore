@@ -1,0 +1,30 @@
+out
+node_modules
+.vscode-test/
+*.vsix
+coverage/
+reports/
+.DS_Store
+.nyc_output
+*.log
+
+# IDE
+.vscode/settings.json.bak
+.idea/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Dependencies
+package-lock.json
+yarn.lock
+
+# Build artifacts
+dist/
+build/
+
+# Test artifacts
+test-results/
+junit.xml
