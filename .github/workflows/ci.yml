@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        package: [velo, velo_test]
         
     steps:
     - name: Checkout code
@@ -25,23 +26,30 @@ jobs:
         channel: 'stable'
         cache: true
         
-    - name: Get dependencies
+    - name: Get workspace dependencies
       run: flutter pub get
+      
+    - name: Get package dependencies
+      run: flutter pub get
+      working-directory: packages/${{ matrix.package }}
       
     - name: Verify formatting
       run: dart format --output=none --set-exit-if-changed .
+      working-directory: packages/${{ matrix.package }}
       
     - name: Analyze project source
       run: flutter analyze --fatal-infos
+      working-directory: packages/${{ matrix.package }}
       
     - name: Run tests
       run: flutter test --coverage
+      working-directory: packages/${{ matrix.package }}
       
     - name: Upload coverage to Codecov
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-latest' && matrix.package == 'velo'
       uses: codecov/codecov-action@v3
       with:
-        file: coverage/lcov.info
+        file: packages/velo/coverage/lcov.info
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
@@ -62,8 +70,43 @@ jobs:
         channel: 'stable'
         cache: true
         
-    - name: Get dependencies
+    - name: Get workspace dependencies
       run: flutter pub get
       
-    - name: Check package publish readiness
+    - name: Get example dependencies
+      run: flutter pub get
+      working-directory: example
+      
+    - name: Build example app
+      run: flutter build apk --debug
+      working-directory: example
+
+  publish:
+    name: Publish dry run
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        package: [velo, velo_test]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.32.5'
+        channel: 'stable'
+        cache: true
+        
+    - name: Get workspace dependencies
+      run: flutter pub get
+      
+    - name: Get package dependencies
+      run: flutter pub get
+      working-directory: packages/${{ matrix.package }}
+      
+    - name: Publish dry run
       run: flutter pub publish --dry-run
+      working-directory: packages/${{ matrix.package }}
