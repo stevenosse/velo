@@ -477,7 +477,7 @@ veloTest<MyVelo, MyState>(
 
 ## Documentation
 
-For more detailed documentation and examples, visit our [GitHub repository](https://github.com/steve-nosse/velo).
+For more detailed documentation and examples, visit our [GitHub repository](https://github.com/stevenosse/velo).
 
 ## License
 

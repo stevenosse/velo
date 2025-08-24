@@ -1,11 +1,11 @@
 name: velo_test
 description: Testing utilities for the Velo state management package.
 version: 1.0.0
-homepage: https://github.com/steve-nosse/velo
-repository: https://github.com/steve-nosse/velo
-issue_tracker: https://github.com/steve-nosse/velo/issues
+homepage: https://github.com/stevenosse/velo
+repository: https://github.com/stevenosse/velo
+issue_tracker: https://github.com/stevenosse/velo/issues
 resolution: workspace
-documentation: https://github.com/steve-nosse/velo#readme
+documentation: https://github.com/stevenosse/velo#readme
 
 environment:
   sdk: '^3.8.1'
@@ -31,8 +31,8 @@ dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  meta: ^1.11.0
-  provider: ^6.1.5
+  meta: ^1.16.0
+  provider: ^6.1.5+1
   velo: ^1.0.0
 
 dev_dependencies:

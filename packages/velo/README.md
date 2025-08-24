@@ -9,7 +9,6 @@ A simple and efficient state management solution for Flutter, inspired by flutte
 - 🔄 **Reactive**: Automatic UI updates when state changes
 - 🧪 **Testable**: Easy to test with built-in testing utilities
 - 📦 **Lightweight**: Minimal dependencies
-- 🎯 **Type-safe**: Full TypeScript-like type safety
 
 ## Installation
 
@@ -77,7 +76,7 @@ class CounterPage extends StatelessWidget {
 }
 ```
 
-## Available Widgets
+## Available widgets
 
 - **VeloBuilder**: Rebuilds when state changes
 - **VeloListener**: Performs side effects without rebuilding
@@ -86,7 +85,7 @@ class CounterPage extends StatelessWidget {
 
 ## Documentation
 
-For more detailed documentation, examples, and best practices, visit our [GitHub repository](https://github.com/steve-nosse/velo).
+For more detailed documentation, examples, and best practices, visit our [GitHub repository](https://github.com/stevenosse/velo).
 
 ## License
 

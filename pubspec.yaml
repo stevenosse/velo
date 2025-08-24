@@ -1,10 +1,10 @@
 name: velo_workspace
 description: A multi-package workspace for Velo state management solution and testing utilities.
 version: 1.0.0
-homepage: https://github.com/steve-nosse/velo
-repository: https://github.com/steve-nosse/velo
-issue_tracker: https://github.com/steve-nosse/velo/issues
-documentation: https://github.com/steve-nosse/velo#readme
+homepage: https://github.com/stevenosse/velo
+repository: https://github.com/stevenosse/velo
+issue_tracker: https://github.com/stevenosse/velo/issues
+documentation: https://github.com/stevenosse/velo#readme
 publish_to: 'none' # This is a workspace, not a publishable package
 
 environment:
