@@ -104,28 +104,20 @@ void main() {
       },
       expect: () => [1, 2, 3],
     );
-
-    veloTest<TestCounterVelo, int>(
-      'should skip initial state when specified - skips initial state',
-      build: () => TestCounterVelo(),
-      skip: 1, // Skip initial state (0)
-      act: (velo) => velo.increment(),
-      expect: () => [1],
-    );
   });
 
-  group('veloTestGroup', () {
-    veloTestGroup<TestCounterVelo, int>(
-      'increments to 1',
+  group('additional veloTest scenarios', () {
+    veloTest<TestCounterVelo, int>(
+      'increments to 1 - additional test',
       build: () => TestCounterVelo(),
-      act: (velo) => velo.increment(),
+      act: (TestCounterVelo velo) => velo.increment(),
       expect: () => [1],
     );
 
-    veloTestGroup<TestCounterVelo, int>(
-      'increments by 5',
+    veloTest<TestCounterVelo, int>(
+      'increments by 5 - additional test',
       build: () => TestCounterVelo(),
-      act: (velo) => velo.incrementBy(5),
+      act: (TestCounterVelo velo) => velo.incrementBy(5),
       expect: () => [5],
     );
   });

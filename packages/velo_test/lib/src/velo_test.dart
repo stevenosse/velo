@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' as test;
 import 'package:meta/meta.dart';
 import 'package:velo/velo.dart';
 
@@ -17,10 +17,10 @@ import 'package:velo/velo.dart';
 /// [wait] is an optional [Duration] which can be used to wait for async operations
 /// within the [Velo] under test such as debounce timers.
 ///
-/// [expect] is an optional [Function] that returns a [Matcher] which the [Velo]
+/// [expect] is an optional [Function] that returns a [test.Matcher] which the [Velo]
 /// under test is expected to emit after [act] is executed.
 ///
-/// [errors] is an optional [Function] that returns a [Matcher] which the [Velo]
+/// [errors] is an optional [Function] that returns a [test.Matcher] which the [Velo]
 /// under test is expected to throw after [act] is executed.
 ///
 /// [skip] is an optional [int] which can be used to skip any number of states.
@@ -59,11 +59,11 @@ void veloTest<V extends Velo<S>, S>(
   dynamic Function()? errors,
   FutureOr<void> Function()? setUp,
   FutureOr<void> Function()? tearDown,
-  bool verify = true,
+  FutureOr<void> Function(V velo)? verify,
   Map<String, dynamic>? tags,
-  Timeout? timeout,
+  Duration? timeout,
 }) {
-  test(
+  test.test(
     description,
     () async {
       await setUp?.call();
@@ -90,139 +90,66 @@ void veloTest<V extends Velo<S>, S>(
 
         try {
           await act?.call(velo);
-
-          if (wait != null) {
-            await Future<void>.delayed(wait);
-          }
-
-          if (expect != null) {
-            final dynamic expected = expect();
-            final List<S> expectedStates = expected is List<S>
-                ? expected
-                : expected is Iterable<S>
-                ? expected.toList()
-                : <S>[expected as S];
-
-            final List<S> actualStates = skip > 0
-                ? states.skip(skip).toList()
-                : states;
-
-            if (verify) {
-              expect(actualStates, equals(expectedStates));
-            }
-          }
-
-          if (errors != null) {
-            final dynamic expectedErrors = errors();
-            final List<Object> expectedErrorsList = expectedErrors is List
-                ? List<Object>.from(expectedErrors)
-                : expectedErrors is Iterable
-                ? List<Object>.from(expectedErrors)
-                : <Object>[expectedErrors as Object];
-
-            if (verify) {
-              expect(veloErrors, equals(expectedErrorsList));
-            }
-          }
-        } finally {
-          velo.removeListener(stateListener);
-        }
-      } finally {
-        await tearDown?.call();
-      }
-    },
-    tags: tags,
-    timeout: timeout,
-  );
-}
-
-/// A variant of [veloTest] that uses the standard `test` function instead of `testWidgets`.
-/// This is useful when you don't need widget testing capabilities.
-@isTest
-void veloTestGroup<V extends Velo<S>, S>(
-  String description, {
-  required V Function() build,
-  S? seed,
-  FutureOr<void> Function(V velo)? act,
-  Duration? wait,
-  int skip = 0,
-  dynamic Function()? expect,
-  dynamic Function()? errors,
-  FutureOr<void> Function()? setUp,
-  FutureOr<void> Function()? tearDown,
-  bool verify = true,
-  Map<String, dynamic>? tags,
-  Timeout? timeout,
-}) {
-  test(
-    description,
-    () async {
-      await setUp?.call();
-
-      late V velo;
-      late List<S> states;
-      late List<Object> veloErrors;
-
-      try {
-        velo = build();
-        states = <S>[];
-        veloErrors = <Object>[];
-
-        if (seed != null) {
-          velo.emit(seed);
+        } on Exception catch (error) {
+          // Capture synchronous errors from act function
+          veloErrors.add(error);
         }
 
-        // Listen to state changes using addListener
-        void stateListener() {
-          states.add(velo.state);
+        if (wait != null) {
+          await Future<void>.delayed(wait);
         }
-
-        velo.addListener(stateListener);
 
         try {
-          await act?.call(velo);
-
-          if (wait != null) {
-            await Future<void>.delayed(wait);
-          }
-
           if (expect != null) {
             final dynamic expected = expect();
             final List<S> expectedStates = expected is List<S>
                 ? expected
                 : expected is Iterable<S>
-                ? expected.toList()
-                : <S>[expected as S];
+                    ? expected.toList()
+                    : <S>[expected as S];
 
             final List<S> actualStates = skip > 0
                 ? states.skip(skip).toList()
                 : states;
 
-            if (verify) {
-              expect(actualStates, equals(expectedStates));
-            }
+            test.expect(
+              actualStates,
+              test.equals(expectedStates),
+              reason: 'Expected states $expectedStates but got $actualStates',
+            );
           }
 
           if (errors != null) {
             final dynamic expectedErrors = errors();
-            final List<Object> expectedErrorsList = expectedErrors is List
-                ? List<Object>.from(expectedErrors)
+            final List<test.Matcher> expectedErrorMatchers = expectedErrors is List
+                ? expectedErrors.cast<test.Matcher>()
                 : expectedErrors is Iterable
-                ? List<Object>.from(expectedErrors)
-                : <Object>[expectedErrors as Object];
+                    ? expectedErrors.cast<test.Matcher>().toList()
+                    : <test.Matcher>[expectedErrors as test.Matcher];
 
-            if (verify) {
-              expect(veloErrors, equals(expectedErrorsList));
+            test.expect(
+              veloErrors.length,
+              test.equals(expectedErrorMatchers.length),
+              reason: 'Expected ${expectedErrorMatchers.length} errors but got ${veloErrors.length}',
+            );
+
+            for (int i = 0; i < expectedErrorMatchers.length; i++) {
+              test.expect(veloErrors[i], expectedErrorMatchers[i]);
             }
           }
+
+          // Call custom verify function if provided
+          await verify?.call(velo);
         } finally {
           velo.removeListener(stateListener);
         }
       } finally {
+        velo.dispose();
         await tearDown?.call();
       }
     },
     tags: tags,
-    timeout: timeout,
+    timeout: timeout != null ? test.Timeout(timeout) : null,
   );
 }
+

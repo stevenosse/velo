@@ -129,20 +129,9 @@ Future<void> waitForCondition(
   }
   
   if (!condition()) {
-    throw TimeoutException(
+    throw Exception(
       'Condition was not met within ${timeout.inMilliseconds}ms',
-      timeout,
     );
   }
 }
 
-/// Exception thrown when a condition times out.
-class TimeoutException implements Exception {
-  const TimeoutException(this.message, this.timeout);
-  
-  final String message;
-  final Duration timeout;
-  
-  @override
-  String toString() => 'TimeoutException: $message';
-}

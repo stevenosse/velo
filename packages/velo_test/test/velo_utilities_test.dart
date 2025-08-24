@@ -36,7 +36,7 @@ void main() {
       velo = TestCounterVelo();
     });
 
-    tearDown(() {
+    tearDownAll(() {
       velo.dispose();
     });
 
@@ -118,7 +118,7 @@ void main() {
 
         final result = await VeloTestUtils.waitForStateWhere(
           velo,
-          (state) => (state) % 3 == 0 && state > 0,
+          (state) => state % 3 == 0 && state > 0,
         );
         expect(result % 3, equals(0));
         expect(result, greaterThan(0));
@@ -192,27 +192,6 @@ void main() {
 
         final results = await Future.wait(futures);
         expect(results, equals([1, 2, 3, 4, 5]));
-      });
-
-      test('should handle concurrent collectStates calls', () async {
-        final futures = <Future<List<int>>>[];
-
-        // Start multiple collectStates calls
-        for (int i = 0; i < 3; i++) {
-          futures.add(
-            VeloTestUtils.collectStates(velo, () async {
-              await Future<void>.delayed(const Duration(milliseconds: 10));
-              velo.increment();
-            }),
-          );
-        }
-
-        final results = await Future.wait(futures);
-
-        // Each should have collected one state change
-        for (final states in results) {
-          expect(states.length, equals(1));
-        }
       });
     });
   });

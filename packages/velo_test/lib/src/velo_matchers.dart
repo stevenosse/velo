@@ -4,43 +4,79 @@ import 'package:velo/velo.dart';
 
 /// Custom matchers for Velo testing.
 class VeloMatchers {
+  /// Private constructor to prevent instantiation
+  VeloMatchers._();
+
   /// Matches when a Velo notifier emits the expected states in order.
-  static Matcher emitsInOrder<S>(List<S> expectedStates) => _EmitsInOrderMatcher<S>(expectedStates);
+  static Matcher emitsInOrder<S>(List<S> expectedStates) {
+    ArgumentError.checkNotNull(expectedStates, 'expectedStates');
+    return _EmitsInOrderMatcher<S>(expectedStates);
+  }
 
   /// Matches when a Velo notifier emits any of the expected states.
-  static Matcher emitsAnyOf<S>(List<S> expectedStates) => _EmitsAnyOfMatcher<S>(expectedStates);
+  static Matcher emitsAnyOf<S>(List<S> expectedStates) {
+    ArgumentError.checkNotNull(expectedStates, 'expectedStates');
+    if (expectedStates.isEmpty) {
+      throw ArgumentError.value(expectedStates, 'expectedStates', 'Cannot be empty');
+    }
+    return _EmitsAnyOfMatcher<S>(expectedStates);
+  }
 
   /// Matches when a Velo notifier's current state equals the expected state.
-  static Matcher hasState<S>(S expectedState) => _HasStateMatcher<S>(expectedState);
+  static Matcher hasState<S>(S expectedState) {
+    ArgumentError.checkNotNull(expectedState, 'expectedState');
+    return _HasStateMatcher<S>(expectedState);
+  }
 
   /// Matches when a Velo notifier emits exactly the expected number of states.
-  static Matcher emitsCount(int expectedCount) => _EmitsCountMatcher(expectedCount);
+  static Matcher emitsCount(int expectedCount) {
+    ArgumentError.checkNotNull(expectedCount, 'expectedCount');
+    if (expectedCount < 0) {
+      throw ArgumentError.value(expectedCount, 'expectedCount', 'Cannot be negative');
+    }
+    return _EmitsCountMatcher(expectedCount);
+  }
 
   /// Matches when a Velo notifier emits states that satisfy the given predicate.
-  static Matcher emitsWhere<S>(bool Function(S state) predicate) => _EmitsWhereMatcher<S>(predicate);
+  static Matcher emitsWhere<S>(bool Function(S state) predicate) {
+    ArgumentError.checkNotNull(predicate, 'predicate');
+    return _EmitsWhereMatcher<S>(predicate);
+  }
 }
 
 /// Matcher that checks if states are emitted in the expected order.
 class _EmitsInOrderMatcher<S> extends Matcher {
-
   const _EmitsInOrderMatcher(this.expectedStates);
+  
   final List<S> expectedStates;
 
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
-    if (item is! List<S>) return false;
+    if (item is! List<S>) {
+      matchState['error'] = 'Expected List<$S> but got ${item.runtimeType}';
+      return false;
+    }
     
-    if (item.length != expectedStates.length) return false;
+    if (item.length != expectedStates.length) {
+      matchState['error'] = 
+          'Expected ${expectedStates.length} states but got ${item.length}';
+      return false;
+    }
     
     for (int i = 0; i < expectedStates.length; i++) {
-      if (item[i] != expectedStates[i]) return false;
+      if (item[i] != expectedStates[i]) {
+        matchState['error'] = 
+            'State at index $i: expected ${expectedStates[i]} but got ${item[i]}';
+        return false;
+      }
     }
     
     return true;
   }
 
   @override
-  Description describe(Description description) => description.add('emits states in order: $expectedStates');
+  Description describe(Description description) =>
+      description.add('emits states in order: $expectedStates');
 
   @override
   Description describeMismatch(
@@ -48,7 +84,13 @@ class _EmitsInOrderMatcher<S> extends Matcher {
     Description mismatchDescription,
     Map<dynamic, dynamic> matchState,
     bool verbose,
-  ) => mismatchDescription.add('emitted: $item');
+  ) {
+    final error = matchState['error'];
+    if (error != null) {
+      return mismatchDescription.add(error.toString());
+    }
+    return mismatchDescription.add('emitted: $item');
+  }
 }
 
 /// Matcher that checks if any of the expected states are emitted.
@@ -163,22 +205,43 @@ class _EmitsWhereMatcher<S> extends Matcher {
 
 /// Utility functions for Velo testing.
 class VeloTestUtils {
+  /// Private constructor to prevent instantiation
+  VeloTestUtils._();
+
   /// Waits for a Velo notifier to emit a specific state.
   static Future<void> waitForState<S>(
     Velo<S> velo,
     S expectedState, {
     Duration timeout = const Duration(seconds: 5),
   }) async {
+    ArgumentError.checkNotNull(velo, 'velo');
+    ArgumentError.checkNotNull(expectedState, 'expectedState');
+    ArgumentError.checkNotNull(timeout, 'timeout');
+
+    if (timeout.isNegative) {
+      throw ArgumentError.value(timeout, 'timeout', 'Cannot be negative');
+    }
+
     if (velo.state == expectedState) return;
     
     final completer = Completer<void>();
     late void Function() listener;
+    Timer? timeoutTimer;
     
     listener = () {
-      if (velo.state == expectedState) {
+      try {
+        if (velo.state == expectedState) {
+          velo.removeListener(listener);
+          timeoutTimer?.cancel();
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+        }
+      } catch (error) {
         velo.removeListener(listener);
+        timeoutTimer?.cancel();
         if (!completer.isCompleted) {
-          completer.complete();
+          completer.completeError(error);
         }
       }
     };
@@ -186,12 +249,12 @@ class VeloTestUtils {
     velo.addListener(listener);
     
     // Set up timeout
-    Timer(timeout, () {
+    timeoutTimer = Timer(timeout, () {
       velo.removeListener(listener);
       if (!completer.isCompleted) {
         completer.completeError(
           TimeoutException(
-            'Timed out waiting for state: $expectedState',
+            'Timed out waiting for state: $expectedState after ${timeout.inMilliseconds}ms',
             timeout,
           ),
         );

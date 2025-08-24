@@ -42,8 +42,32 @@
 /// ```
 library;
 
+// Convenience functions for easier access to matchers
+import 'package:flutter_test/flutter_test.dart';
+import 'src/velo_matchers.dart';
+
 export 'src/mock_velo.dart';
 export 'src/test_helpers.dart';
 export 'src/velo_matchers.dart';
 export 'src/velo_test.dart';
 export 'src/widget_test_helpers.dart';
+
+/// Matches when a Velo notifier emits the expected states in order.
+Matcher emitsInOrder<S>(List<S> expectedStates) =>
+    VeloMatchers.emitsInOrder<S>(expectedStates);
+
+/// Matches when a Velo notifier emits any of the expected states.
+Matcher emitsAnyOf<S>(List<S> expectedStates) =>
+    VeloMatchers.emitsAnyOf<S>(expectedStates);
+
+/// Matches when a Velo notifier's current state equals the expected state.
+Matcher hasState<S>(S expectedState) =>
+    VeloMatchers.hasState<S>(expectedState);
+
+/// Matches when a Velo notifier emits exactly the expected number of states.
+Matcher emitsCount(int expectedCount) =>
+    VeloMatchers.emitsCount(expectedCount);
+
+/// Matches when a Velo notifier emits states that satisfy the given predicate.
+Matcher emitsWhere<S>(bool Function(S state) predicate) =>
+    VeloMatchers.emitsWhere<S>(predicate);
