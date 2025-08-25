@@ -102,21 +102,69 @@ void veloTest<V extends Velo<S>, S>(
         try {
           if (expect != null) {
             final dynamic expected = expect();
-            final List<S> expectedStates = expected is List<S>
-                ? expected
-                : expected is Iterable<S>
-                ? expected.toList()
-                : <S>[expected as S];
 
-            final List<S> actualStates = skip > 0
-                ? states.skip(skip).toList()
-                : states;
+            // Handle both actual states and matchers
+            if (expected is List) {
+              final List<S> actualStates = skip > 0
+                  ? states.skip(skip).toList()
+                  : states;
 
-            test.expect(
-              actualStates,
-              test.equals(expectedStates),
-              reason: 'Expected states $expectedStates but got $actualStates',
-            );
+              // Check if the list contains matchers or actual values
+              if (expected.isNotEmpty && expected.first is test.Matcher) {
+                // Handle list of matchers
+                final List<test.Matcher> matchers = expected
+                    .cast<test.Matcher>();
+                test.expect(
+                  actualStates.length,
+                  test.equals(matchers.length),
+                  reason:
+                      'Expected ${matchers.length} states but got ${actualStates.length}',
+                );
+
+                for (int i = 0; i < matchers.length; i++) {
+                  test.expect(actualStates[i], matchers[i]);
+                }
+              } else {
+                // Handle list of actual values
+                final List<S> expectedStates = expected.cast<S>();
+                test.expect(
+                  actualStates,
+                  test.equals(expectedStates),
+                  reason:
+                      'Expected states $expectedStates but got $actualStates',
+                );
+              }
+            } else if (expected is test.Matcher) {
+              // Handle single matcher
+              final List<S> actualStates = skip > 0
+                  ? states.skip(skip).toList()
+                  : states;
+
+              test.expect(
+                actualStates.length,
+                test.equals(1),
+                reason: 'Expected 1 state but got ${actualStates.length}',
+              );
+
+              if (actualStates.isNotEmpty) {
+                test.expect(actualStates.first, expected);
+              }
+            } else {
+              // Handle single actual value or iterable
+              final List<S> expectedStates = expected is Iterable<S>
+                  ? expected.toList()
+                  : <S>[expected as S];
+
+              final List<S> actualStates = skip > 0
+                  ? states.skip(skip).toList()
+                  : states;
+
+              test.expect(
+                actualStates,
+                test.equals(expectedStates),
+                reason: 'Expected states $expectedStates but got $actualStates',
+              );
+            }
           }
 
           if (errors != null) {
