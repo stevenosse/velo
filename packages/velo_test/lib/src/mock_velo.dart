@@ -15,13 +15,13 @@ import 'package:velo/velo.dart';
 ///   group('CounterVelo', () {
 ///     test('should increment counter', () {
 ///       final mockVelo = MockVelo<int>(0);
-///       
+///
 ///       mockVelo.emit(1);
 ///       mockVelo.emit(2);
-///       
+///
 ///       mockVelo.verifyStatesEmittedInOrder([1, 2]);
 ///       expect(mockVelo.emittedStates, [1, 2]);
-///       
+///
 ///       mockVelo.dispose();
 ///     });
 ///   });

@@ -90,7 +90,7 @@ void veloTest<V extends Velo<S>, S>(
 
         try {
           await act?.call(velo);
-        } catch (error) {
+        } on Exception catch (error) {
           // Capture synchronous errors from act function
           veloErrors.add(error);
         }

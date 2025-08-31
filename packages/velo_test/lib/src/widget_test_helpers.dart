@@ -165,7 +165,7 @@ Future<void> waitFor(
       if (condition()) {
         return; // Condition met, exit successfully
       }
-    } catch (error) {
+    } on Exception catch (error) {
       lastError = error;
       // Continue trying unless timeout is reached
     }

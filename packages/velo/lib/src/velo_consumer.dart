@@ -96,11 +96,11 @@ class _VeloConsumerState<N extends Velo<T>, T>
     super.didUpdateWidget(oldWidget);
     final oldState = previousState;
     _initializeNotifier();
-    
+
     // Call listener if the new notifier has a different state
-    if (widget.listener != null && 
-        oldState != previousState && 
-        mounted && 
+    if (widget.listener != null &&
+        oldState != previousState &&
+        mounted &&
         notifier != null) {
       try {
         widget.listener!.call(context, notifier!.state);
@@ -128,7 +128,7 @@ class _VeloConsumerState<N extends Velo<T>, T>
     if (notifier == null) {
       return const SizedBox.shrink();
     }
-    
+
     return ValueListenableBuilder<T>(
       valueListenable: notifier!,
       builder: (context, state, _) {
