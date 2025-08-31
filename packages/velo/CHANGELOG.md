@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2025-08-31
+
+### Breaking changes
+- Renamed `loadingWidget` to `errorWidget` in `VeloBuilder` for better clarity
+
+### Fixed
+- Critical memory leak in `VeloConsumer` listener management
+- Race condition in `VeloConsumer` state updates
+- Missing API documentation for pub.dev score improvement
+
+### Changed
+- Optimized `Velo.emit()` performance by removing redundant comparisons
+- Improved error handling consistency across all widgets
+- Enhanced null safety throughout the codebase
+
 ## [1.1.0] - 2025-08-24
 
 - Minor improvements and bug fixes

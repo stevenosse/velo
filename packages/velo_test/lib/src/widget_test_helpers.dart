@@ -36,7 +36,7 @@ extension VeloWidgetTester on WidgetTester {
       }
 
       await pumpWidget(testWidget);
-    } on Exception catch (e) {
+    } catch (e) {
       throw StateError('Unexpected error while pumping widget: $e');
     }
   }
@@ -79,7 +79,7 @@ extension VeloWidgetTester on WidgetTester {
           );
         }
       }, timeout: timeout);
-    } on Exception catch (e) {
+    } catch (e) {
       throw StateError('Failed to wait for Velo state $expectedState: $e');
     }
   }
@@ -111,7 +111,10 @@ class VeloTestWidget<T extends Velo<S>, S> extends StatelessWidget {
     child: MaterialApp(
       home: Scaffold(
         body: builder != null
-            ? VeloBuilder<T, S>(builder: builder!)
+            ? VeloBuilder<T, S>(
+                builder: builder!,
+                errorWidget: const Text('Test Error'),
+              )
             : listener != null
             ? VeloListener<T, S>(
                 listener: listener!,
@@ -162,7 +165,7 @@ Future<void> waitFor(
       if (condition()) {
         return; // Condition met, exit successfully
       }
-    } on Exception catch (error) {
+    } catch (error) {
       lastError = error;
       // Continue trying unless timeout is reached
     }

@@ -4,11 +4,33 @@ import 'package:velo/velo.dart';
 /// A mock implementation of [Velo] for testing purposes.
 ///
 /// This class provides additional testing capabilities such as:
-/// - State history tracking
-/// - Emission verification
-/// - Custom state injection
-/// - Automatic memory management
+/// - State history tracking with memory leak prevention
+/// - Emission verification methods
+/// - State disposal detection
+/// - Automatic cleanup and validation
+///
+/// **Example:**
+/// ```dart
+/// void main() {
+///   group('CounterVelo', () {
+///     test('should increment counter', () {
+///       final mockVelo = MockVelo<int>(0);
+///       
+///       mockVelo.emit(1);
+///       mockVelo.emit(2);
+///       
+///       mockVelo.verifyStatesEmittedInOrder([1, 2]);
+///       expect(mockVelo.emittedStates, [1, 2]);
+///       
+///       mockVelo.dispose();
+///     });
+///   });
+/// }
+/// ```
 class MockVelo<T> extends Velo<T> {
+  /// Creates a new [MockVelo] with the given initial state.
+  ///
+  /// The [initialState] will be added to the state history automatically.
   MockVelo(super.initialState) {
     _addInitialStateToHistory();
   }
@@ -64,6 +86,10 @@ class MockVelo<T> extends Velo<T> {
     }
   }
 
+  /// Emits a new state and adds it to the history.
+  ///
+  /// This method automatically manages history size to prevent memory leaks
+  /// and tracks all emitted states for later verification.
   @override
   void emit(T state) {
     _checkNotDisposed();
@@ -123,8 +149,15 @@ class MockVelo<T> extends Velo<T> {
   }
 
   /// Gets whether the history size is approaching the limit.
+  ///
+  /// Returns true if the history contains more than 80% of [_maxHistorySize].
+  /// This can be used to detect potential memory issues in tests.
   bool get isHistoryNearLimit => historySize > _maxHistorySize * 0.8;
 
+  /// Disposes the mock and clears all state history.
+  ///
+  /// After disposal, all methods will throw a [StateError] if called.
+  /// This ensures proper cleanup and prevents memory leaks in tests.
   @override
   void dispose() {
     if (!_disposed) {

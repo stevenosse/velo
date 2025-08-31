@@ -27,14 +27,14 @@ void main() {
       notifier.dispose();
     });
 
-    testWidgets('should show loading widget on builder error', (tester) async {
+    testWidgets('should show error widget on builder error', (tester) async {
       final notifier = CounterNotifier();
 
       await tester.pumpWidget(
         createTestWidget(
           counterNotifier: notifier,
           child: VeloBuilder<CounterNotifier, CounterState>(
-            loadingWidget: const Text('Loading'),
+            errorWidget: const Text('Error'),
             builder: (context, state) {
               throw Exception('Builder error');
             },
@@ -42,7 +42,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Loading'), findsOneWidget);
+      expect(find.text('Error'), findsOneWidget);
 
       notifier.dispose();
     });
@@ -51,7 +51,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: VeloBuilder<CounterNotifier, CounterState>(
-            loadingWidget: Text('No Notifier'),
+            errorWidget: Text('No Notifier'),
             builder: buildText,
           ),
         ),
@@ -67,7 +67,7 @@ void main() {
         createTestWidget(
           counterNotifier: notifier,
           child: VeloBuilder<CounterNotifier, CounterState>(
-            loadingWidget: const Text('Loading'),
+            errorWidget: const Text('Error'),
             builder: (context, state) => Text('Count: ${state.count}'),
           ),
         ),

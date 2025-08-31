@@ -9,7 +9,35 @@ import 'velo.dart';
 ///
 /// This is useful when you want to perform side effects (like showing a snackbar)
 /// in response to state changes without rebuilding the widget tree.
+///
+/// **Parameters:**
+/// - [notifier]: Optional [Velo] instance. If null, will use [Provider] to find it.
+/// - [listener]: Function called when the state changes (for side effects).
+// ignore: comment_references
+/// - [child]: The widget subtree that this listener wraps.
+///
+/// **Example:**
+/// ```dart
+/// VeloListener<CounterVelo, CounterState>(
+///   listener: (context, state) {
+///     if (state.count > 10) {
+///       ScaffoldMessenger.of(context).showSnackBar(
+///         SnackBar(content: Text('Counter is high!')),
+///       );
+///     }
+///   },
+///   child: MyChildWidget(),
+/// )
+/// ```
 class VeloListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
+  /// Creates a [VeloListener] that listens to a [Velo] and performs side effects.
+  ///
+  /// The [listener] parameter is required and will be called whenever the state changes.
+  ///
+  /// The [notifier] parameter is optional. If not provided, [VeloListener] will attempt
+  /// to find the [Velo] instance using [Provider.of] from the widget tree.
+  ///
+  /// The [child] parameter is the widget subtree that this listener wraps.
   const VeloListener({
     super.key,
     this.notifier,
@@ -17,7 +45,26 @@ class VeloListener<N extends Velo<T>, T> extends SingleChildStatefulWidget {
     super.child,
   });
 
+  /// The [Velo] notifier to listen to for state changes.
+  ///
+  /// If null, [VeloListener] will attempt to find an instance of type [N]
+  /// in the widget tree using [Provider.of].
   final N? notifier;
+
+  /// A function called when the state changes.
+  ///
+  /// This function is called with the current [BuildContext] and the new state [T]
+  /// whenever the state actually changes. It should be used for side effects
+  /// like navigation, showing dialogs, or updating other parts of the application.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// listener: (context, state) {
+  ///   if (state.hasError) {
+  ///     showDialog(context: context, builder: (_) => ErrorDialog());
+  ///   }
+  /// }
+  /// ```
   final void Function(BuildContext context, T state) listener;
 
   @override

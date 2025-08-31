@@ -44,6 +44,17 @@ import 'package:flutter/foundation.dart';
 /// )
 /// ```
 abstract class Velo<S> extends ValueNotifier<S> {
+  /// Creates a new [Velo] instance with the given initial state.
+  ///
+  /// The [state] parameter is the initial state that this [Velo] will hold.
+  /// This constructor passes the initial state to the parent [ValueNotifier].
+  ///
+  /// **Example:**
+  /// ```dart
+  /// class CounterVelo extends Velo<CounterState> {
+  ///   CounterVelo() : super(const CounterState(count: 0));
+  /// }
+  /// ```
   Velo(super.state);
 
   /// Gets the current state.
@@ -53,9 +64,9 @@ abstract class Velo<S> extends ValueNotifier<S> {
 
   /// Emits a new state if it's different from the current state.
   ///
-  /// For states that implement [Equatable], the comparison is done using the
-  /// `==` operator which respects [Equatable]'s implementation.
-  /// For other states, direct comparison is used.
+  /// The comparison uses the `==` operator, which for [Equatable] states
+  /// will use the equatable comparison, and for other states will use
+  /// their overridden equality or reference equality.
   ///
   /// This method only triggers listeners if the new state is actually different.
   ///
@@ -64,11 +75,7 @@ abstract class Velo<S> extends ValueNotifier<S> {
   /// emit(state.copyWith(count: state.count + 1));
   /// ```
   void emit(S state) {
-    if (state is Equatable && value is Equatable) {
-      if (state != value) {
-        value = state;
-      }
-    } else if (state != value) {
+    if (state != value) {
       value = state;
     }
   }

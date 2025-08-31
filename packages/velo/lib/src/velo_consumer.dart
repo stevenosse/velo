@@ -50,17 +50,25 @@ class VeloConsumer<N extends Velo<T>, T> extends StatefulWidget {
 
 class _VeloConsumerState<N extends Velo<T>, T>
     extends State<VeloConsumer<N, T>> {
-  late N notifier;
+  N? notifier;
   T? previousState;
 
   @override
   void initState() {
     super.initState();
+    _initializeNotifier();
+  }
+
+  void _initializeNotifier() {
     try {
-      notifier = widget.notifier ?? context.read<N>();
-      previousState = notifier.state;
+      final newNotifier = widget.notifier ?? context.read<N>();
+      if (notifier != newNotifier) {
+        notifier?.removeListener(_handleStateChange);
+        notifier = newNotifier;
+        previousState = notifier!.state;
+        notifier!.addListener(_handleStateChange);
+      }
     } catch (error) {
-      // Handle case where notifier is not found in widget tree
       debugPrint(
         'VeloConsumer: Failed to find notifier of type $N in widget tree',
       );
@@ -68,40 +76,44 @@ class _VeloConsumerState<N extends Velo<T>, T>
     }
   }
 
+  void _handleStateChange() {
+    if (mounted && notifier != null) {
+      final currentState = notifier!.state;
+      if (previousState != currentState) {
+        _callListenerIfNeeded(currentState);
+      }
+    }
+  }
+
   @override
   void dispose() {
+    notifier?.removeListener(_handleStateChange);
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant VeloConsumer<N, T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    try {
-      final newNotifier = widget.notifier ?? context.read<N>();
-      if (notifier != newNotifier) {
-        final oldState = previousState;
-        notifier = newNotifier;
-        previousState = notifier.state;
-
-        // Call listener if the new notifier has a different state
-        if (widget.listener != null && oldState != notifier.state && mounted) {
-          try {
-            widget.listener!.call(context, notifier.state);
-          } on Exception catch (error) {
-            debugPrint(
-              'VeloConsumer: Error in listener callback during update: $error',
-            );
-          }
-        }
+    final oldState = previousState;
+    _initializeNotifier();
+    
+    // Call listener if the new notifier has a different state
+    if (widget.listener != null && 
+        oldState != previousState && 
+        mounted && 
+        notifier != null) {
+      try {
+        widget.listener!.call(context, notifier!.state);
+      } on Exception catch (error) {
+        debugPrint(
+          'VeloConsumer: Error in listener callback during update: $error',
+        );
       }
-    } on Exception catch (error) {
-      debugPrint('VeloConsumer: Error updating notifier: $error');
     }
   }
 
   void _callListenerIfNeeded(T currentState) {
-    if (widget.listener != null && previousState != currentState && mounted) {
+    if (widget.listener != null && mounted) {
       try {
         widget.listener!.call(context, currentState);
         previousState = currentState;
@@ -112,11 +124,21 @@ class _VeloConsumerState<N extends Velo<T>, T>
   }
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<T>(
-    valueListenable: notifier,
-    builder: (context, state, _) {
-      _callListenerIfNeeded(state);
-      return widget.builder(context, state);
-    },
-  );
+  Widget build(BuildContext context) {
+    if (notifier == null) {
+      return const SizedBox.shrink();
+    }
+    
+    return ValueListenableBuilder<T>(
+      valueListenable: notifier!,
+      builder: (context, state, _) {
+        try {
+          return widget.builder(context, state);
+        } on Exception catch (error) {
+          debugPrint('VeloConsumer: Error in builder callback: $error');
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
 }
